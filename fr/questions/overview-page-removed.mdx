@@ -1,0 +1,200 @@
+---
+title: Où est passée la page Overview ?
+description: Overview faisait doublon avec Realtime status et a été retirée de la navigation. Sa vue de détail existe toujours sous le nom Realtime details, reconstruite et bien plus paramétrable.
+---
+
+Overview n'apparaît plus dans la navigation. Elle affichait la même chose que **Realtime status**, les deux pages ont donc été fusionnées : c'est désormais sur Realtime status que vous surveillez la santé de l'ensemble. La vue de détail qui se trouvait derrière n'a pas disparu non plus. Elle a été reconstruite sous le nom **Realtime details**, et vous l'ouvrez en cliquant sur le nom d'une carte dans Realtime status.
+
+![Une rangée de cartes produit dans Realtime status. Le nom de la première carte est encadré et un curseur est posé dessus, signalant que c'est le lien qui ouvre Realtime details](/images/realtime-status-open-details.webp)
+
+## Ce qui remplace quoi
+
+| Avant | Maintenant | Comment l'ouvrir |
+|-------|------------|------------------|
+| **Overview**, un statut par produit sur une seule page | **Realtime status**, la même lecture avec les vues sauvegardées, le regroupement, les filtres et les mises en page qu'Overview n'a jamais eus | Dans la section **Overview** de la navigation, cliquez sur **Realtime Status** |
+| **Status details**, la vue de détail située derrière | **Realtime details**, reconstruite de zéro avec deux orientations, une densité, des filtres, des options d'affichage et un mode TV | Cliquez sur le nom d'une carte dans Realtime status |
+
+Rien n'a été supprimé. Une page a absorbé l'autre, et le détail qui se trouvait derrière a été reconstruit.
+
+La section **Overview** de la navigation est toujours là, et contient toujours Realtime Status, Incidents et Analytics. C'est la *page* Overview qu'elle contenait qui a disparu.
+
+![Realtime status avec une carte par produit, chacune affichant son graphique de disponibilité, son pourcentage de disponibilité et son badge de statut. Dans la navigation, la section Overview ne liste plus que Realtime status, Incidents et Analytics](/images/realtime-status-cards.webp)
+
+<Note>
+  Les anciens liens vers Overview continuent de fonctionner. Un favori, ou une URL collée dans une procédure ou un ticket, redirige maintenant vers Realtime status. Vous n'avez rien à mettre à jour de votre côté.
+</Note>
+
+## Pourquoi Overview a été retirée
+
+**Elle affichait deux fois la même donnée.** Overview et Realtime status répondaient à la même question, est-ce que tout va bien en ce moment, à partir des mêmes résultats de monitoring. Deux pages pour un seul rôle, cela voulait dire construire chaque amélioration deux fois, et voir les deux lectures s'éloigner l'une de l'autre avec le temps.
+
+**Overview était la plus limitée des deux.** Elle proposait deux lectures figées, par produit ou par test, plus un filtre sur les zones. C'était tout. Tout ce que vous y faisiez, Realtime status le faisait déjà, avec un contrôle qu'Overview n'a jamais offert.
+
+**Nous avons gardé celle qui pouvait évoluer.** Plutôt que de maintenir deux pages pour un seul rôle, nous avons retiré celle qui avait cessé d'évoluer et concentré l'effort sur Realtime status et sur la page de détail qui se trouve derrière.
+
+## Ce que vous gagnez sur Realtime status
+
+Passer d'Overview à Realtime status n'est pas un simple échange à l'identique. La page se configure, et elle retient vos réglages.
+
+### Des barres plutôt qu'une ligne continue
+
+Les cartes ne tracent plus une ligne continue. Une ligne laissait croire à une valeur à chaque instant, or les moniteurs ne s'exécutent pas à chaque instant : ils s'exécutent à leur fréquence. Elle inventait de la donnée entre deux exécutions, et elle lissait les périodes où rien ne s'était exécuté.
+
+Les barres disent ce qui s'est réellement passé. Une barre par période d'agrégation, dimensionnée par les exécutions qu'elle contient, et un trou reste un trou au lieu d'être relié par une ligne.
+
+### Tout le reste de la page
+
+| | Ce que vous obtenez |
+|--|---------------------|
+| **Les vues sauvegardées** | Chaque vue est un onglet, avec ses propres filtres, sa plage de temps et ses réglages d'affichage. Une par équipe ou par usage, pour ne plus reconstruire les mêmes filtres chaque matin. Renommez-les, dupliquez-les, réordonnez-les, et choisissez celle qui s'ouvre par défaut. |
+| **Le regroupement** | Regroupez les résultats par produit, test ou moniteur. La mise en page List ajoute la localisation et l'agent. |
+| **Deux mises en page** | Cards se lit de loin, List fait tenir beaucoup plus de moniteurs sur un écran. Disposez l'une ou l'autre sur jusqu'à 5 colonnes. |
+| **Un constructeur de filtres** | Des règles sur le produit, le moniteur, le test, le device ou le statut, chaînées en and/or et imbriquables en groupes, de quoi exprimer « tout ce produit sauf ces trois tests ». |
+| **Votre propre période** | Des périodes prédéfinies des 2 dernières heures aux 12 derniers mois, un début et une fin personnalisés, ou un nombre d'exécutions récentes plutôt qu'une durée. |
+| **L'highlight pour zoomer** | Highlightez une plage sur un graphique pour resserrer la vue sur ce moment, et recommencez jusqu'à l'avoir isolé. |
+| **Le rafraîchissement live** | Un compte à rebours indique le prochain rafraîchissement automatique. Mettez-le en pause, ou changez son intervalle. |
+| **Ce que disent les barres** | Affichez le statut de chaque élément ou son pourcentage de disponibilité, en barres empilées ou empilées à 100 %, en montrant ou en masquant les périodes sans exécution. |
+| **Une vue partageable** | La vue vit dans l'URL, donc un lien la réouvre exactement telle que vous l'avez laissée, pour vous comme pour la personne à qui vous l'envoyez. |
+
+L'highlight est le seul de cette liste qu'on ne visualise pas en le lisant. Appuyez sur un graphique, balayez le moment qui vous intéresse, et le reste du graphique s'estompe pendant que votre sélection prend la vue.
+
+![Une carte produit dans Realtime status pendant un highlight. Un rectangle orange encadre une plage de barres au milieu du graphique, et les barres en dehors sont estompées](/images/realtime-status-highlight.webp)
+
+<Note>
+  Realtime status est une page à part entière, avec plus de choses qu'il n'en tient ici. Voir [Realtime status](/fr/monitoring/realtime-status) pour le tour complet.
+</Note>
+
+## Ce qui change sur Realtime details
+
+Realtime details est la Status details reconstruite, la page qui s'ouvre quand vous cliquez sur le nom d'une carte dans Realtime status. La timeline sur laquelle elle repose part de la même idée qu'avant, une case par moniteur et par période, reconstruite pour que vous puissiez la façonner. La plupart de ses réglages sont repris tels quels de Status details. Le vrai ajout, c'est le menu Display.
+
+![Realtime details en timeline verticale : les cartes de synthèse, la légende des statuts, puis une colonne par moniteur avec le temps qui descend le long du bord gauche et une case par période](/images/realtime-details-vertical.webp)
+
+### Le menu Display, le vrai ajout
+
+Un seul bouton rassemble tout ce qui concerne la façon dont la timeline est dessinée. Status details n'avait rien de tout cela.
+
+![Le menu Display de Realtime details, ouvert au-dessus d'une timeline horizontale, avec le sélecteur d'orientation en haut et trois groupes de toggles : Legend and markers, Table UI, Visible elements](/images/realtime-details-display-menu.webp)
+
+Deux sélecteurs sont en haut, et ce sont ceux qui changent le plus souvent :
+
+- **L'orientation** : Vertical timeline, par défaut, ou Horizontal timeline. La verticale met chaque moniteur dans une colonne avec le temps qui descend, l'horizontale met chaque moniteur sur une ligne avec le temps qui défile vers la droite.
+- **La densité**, sur la timeline verticale uniquement : Normal ou Compact. Compact resserre les colonnes de moniteurs pour en faire tenir beaucoup plus à l'écran.
+
+![Deux panneaux côte à côte. À gauche, la timeline verticale : les moniteurs A à D en colonnes, le temps qui descend. À droite, la timeline horizontale : les mêmes moniteurs en lignes, le temps qui défile vers la droite. La même donnée, transposée](/images/realtime-details-orientations.webp)
+
+En dessous, tout le reste est un toggle. Désactivez ce que vous ne lisez jamais et la page devient plus courte et plus claire.
+
+| Toggle | Ce qu'il affiche |
+|--------|------------------|
+| **Legend** | La légende des couleurs au-dessus de la timeline : Success, Warning, Failed, Device issue, Maintenance |
+| **Now line** | Un repère orange sur la case en cours, marquée `now` |
+| **Display percent** | Le pourcentage de disponibilité dans chaque case |
+| **Display labels** | Le type de test dans chaque case, `U` pour USSD par exemple |
+| **Summary cards** | La rangée de cartes au-dessus du tableau : Active monitors, Up, Warning, Down, Device issue, et la disponibilité sur la période avec sa tendance. Désactivée, elle laisse toute la hauteur à la timeline |
+| **Monitor ID** | L'identifiant à côté de chaque moniteur, `#2608` par exemple |
+| **Location** | La zone ou l'agent de chaque colonne |
+| **24h trend** | Les 24 dernières heures de chaque moniteur, en tendance |
+| **Groups** | Regroupe les moniteurs par tag. La ligne de tags disparaît d'elle-même quand aucun des moniteurs visibles n'est taggé |
+
+Deux choses de plus que vous n'avez pas à régler. La **colonne Monitors est redimensionnable**, donc les noms longs restent lisibles, et la page défile d'un seul bloc, avec les en-têtes du tableau épinglés pour qu'ils restent visibles quand vous descendez.
+
+Survolez n'importe quelle case et une infobulle donne le nom du moniteur, la période exacte avec son fuseau horaire, et le décompte des résultats qui y ont été enregistrés, pour qu'une colonne étroite ou un nom tronqué ne vous laisse jamais dans le doute.
+
+### Dans une case, le vrai mélange
+
+Une case contient plusieurs exécutions, et elles ne sont pas toujours d'accord. Un échec sur neuf succès peignait toute la case en jaune : cela vous disait qu'il s'était passé quelque chose là-dedans sans vous dire quoi, et cela occupait la couleur qui appartient à Warning, un vrai statut d'exécution.
+
+La case est maintenant découpée à proportion de ce qui s'est exécuté, neuf parts de succès et une part d'échec, donc vous lisez le ratio directement sur la timeline. Le jaune ne veut plus dire qu'une seule chose : une exécution est revenue en warning, ce qui se configure sur une étape depuis ses [checks](/fr/tests/builder#checks).
+
+### Cliquer sur une case pour rejoindre ses exécutions
+
+Lire une timeline finit presque toujours sur la même question : qu'est-ce qui a échoué, et pourquoi. Cliquez sur n'importe quelle case et un panneau s'ouvre sur le côté, avec les exécutions enregistrées sur cette période pour ce moniteur.
+
+Il donne le nom du moniteur, la période exacte avec son fuseau horaire, et combien d'exécutions sont passées. En dessous, une ligne par exécution, avec sa date, son heure, sa durée et son propre statut. C'est le chemin le plus court entre un bloc rouge et l'exécution qui l'a causé.
+
+![Le panneau des exécutions ouvert à côté de la timeline. Son en-tête porte le nom du moniteur et la période avec son fuseau horaire. En dessous, une ligne de synthèse compte 3 tests sur 6, puis une ligne par exécution avec sa date, son heure et sa durée, chacune marquée de son statut](/images/realtime-details-executions-drawer.webp)
+
+### Votre vue vous suit
+
+Vos réglages sont retenus d'une visite à l'autre, et l'URL porte la vue. Un lien réouvre la page à l'identique pour la personne à qui vous le partagez : mêmes filtres, même orientation, mêmes options.
+
+### Plus rapide à grande échelle
+
+La page s'affiche nettement plus vite, y compris sur un produit qui compte beaucoup de moniteurs.
+
+La colonne 24h trend ne se redessine plus toute seule quand la page reste ouverte. Sur un écran laissé allumé toute la journée, ce clignotement était le défaut le plus visible.
+
+Les trois sections qui suivent ne sont pas des nouveautés. Status details filtrait déjà, portait déjà une plage de temps et une agrégation, et avait déjà un mode TV. Elles sont ici parce que vous allez vous en servir, pas parce qu'elles ont changé.
+
+### Filtrer pour ne garder que l'essentiel
+
+- **Filtrez par test**, avec un champ de recherche pour retrouver un test par mot-clé.
+- **Filtrez les moniteurs** par statut, tag et localisation, depuis les icônes d'entonnoir dans les en-têtes de colonnes **Monitors** et **Location**. Le filtre de localisation est l'endroit où vivent désormais les zones que vous filtriez dans Overview.
+- **Triez** les moniteurs depuis la flèche de l'en-tête Monitors.
+- Quand rien ne correspond, l'en-tête du tableau et les filtres restent en place, pour que vous corrigiez le filtre sans le reconstruire.
+
+### Régler la période et la granularité
+
+L'en-tête de la page porte les réglages qui décident de ce que couvre la timeline.
+
+- **La plage de temps** : la période que couvre la timeline, Last 4h par exemple.
+- **L'agrégation** : la durée que contient une case, 10m par exemple. Sur les longues plages de temps, les agrégations les plus fines ne sont plus proposées, car elles produisaient des tableaux trop denses à lire.
+- **L'export** : sortir de la page la donnée qui alimente la vue en cours.
+
+### Le mode TV pour les écrans de supervision
+
+Un affichage sombre, pensé pour un écran devant lequel l'équipe passe. Il garde les cartes de synthèse et la timeline, ajoute l'heure et la date, et laisse tomber le reste.
+
+![Le mode TV de Realtime details : un affichage sombre pleine largeur avec l'heure et la date, les cartes de synthèse, et la timeline des moniteurs en dessous](/images/realtime-details-tv-mode.webp)
+
+- Activez-le avec le bouton **TV mode** dans l'en-tête de la page, ou avec `?tv=1` dans l'URL pour qu'un favori s'ouvre directement dessus.
+- Il masque entièrement la navigation de gauche pour laisser toute la largeur de la fenêtre à la timeline.
+- Il ne prend plus tout l'écran, vous pouvez donc suivre deux produits côte à côte dans deux fenêtres.
+- Quittez-le avec **Exit TV**, en haut à droite, ou avec la touche `Esc`.
+
+## À configurer une seule fois
+
+Realtime details vaut le coup d'être configurée une fois plutôt que réajustée chaque matin.
+
+<Steps>
+  <Step title="Choisissez votre orientation et votre densité">
+
+    Verticale ou horizontale, Normal ou Compact. Commencez par là, c'est ce qui décide du nombre de moniteurs qui tiennent à votre écran.
+
+</Step>
+  <Step title="Filtrez sur ce que votre équipe surveille">
+
+    Par test, puis par statut, tag ou localisation. Une vue qui n'affiche que ce sur quoi vous agissez se lit plus vite qu'une vue qui affiche tout.
+
+</Step>
+  <Step title="Désactivez ce que vous ne lisez jamais">
+
+    Dans le menu Display, masquez les colonnes et les repères dont vous ne vous servez pas. La page devient plus courte et plus claire.
+
+</Step>
+  <Step title="Mettez-la en favori, ou sur un écran">
+
+    L'URL porte toute la vue, donc un favori la réouvre à l'identique. Ajoutez `?tv=1` pour un écran d'affichage.
+
+</Step>
+</Steps>
+
+<Tip>
+  Gardez un favori par lecture plutôt que de reconfigurer la page chaque fois : un par équipe, un par produit, un pour la TV. Chaque lien réouvre sa propre vue instantanément, pour vous comme pour les personnes à qui vous l'envoyez.
+</Tip>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Realtime status" icon="monitor-waveform" href="/fr/monitoring/realtime-status">
+
+    Construire et sauvegarder les vues de statut que votre équipe consulte chaque jour
+
+</Card>
+  <Card title="Détail d'un moniteur" icon="chart-line" href="/fr/monitoring/monitor-details">
+
+    Creuser la disponibilité, le temps d'exécution et les échecs d'un moniteur
+
+</Card>
+</Columns>

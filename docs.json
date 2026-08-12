@@ -1072,6 +1072,7 @@
                 "icon": "circle-question",
                 "expanded": true,
                 "pages": [
+                  "questions/overview-page-removed",
                   "questions/devices-os-versions"
                 ]
               }
@@ -2147,6 +2148,7 @@
                 "icon": "circle-question",
                 "expanded": true,
                 "pages": [
+                  "fr/questions/overview-page-removed",
                   "fr/questions/devices-os-versions"
                 ]
               }

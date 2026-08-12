@@ -1,0 +1,200 @@
+---
+title: Where did the Overview page go?
+description: Overview duplicated Realtime status and has been removed from the sidebar. Its detail view lives on as Realtime details, rebuilt and far more configurable.
+---
+
+Overview no longer appears in the sidebar. It showed the same thing as **Realtime status**, so the two have been merged into one: Realtime status is where you now watch the health of everything. The detail view behind it has not gone anywhere either. It has been rebuilt as **Realtime details**, and you open it by clicking a card's name in Realtime status.
+
+![A row of product cards in Realtime status. The name of the first card is ringed and a pointer rests on it, marking it as the link that opens Realtime details](/images/realtime-status-open-details.webp)
+
+## What replaced what
+
+| Before | Now | How you open it |
+|--------|-----|-----------------|
+| **Overview**, one status per product on a single page | **Realtime status**, the same reading with saved views, grouping, filters, and layouts Overview never had | In the **Overview** section of the sidebar, click **Realtime Status** |
+| **Status details**, the detail view behind it | **Realtime details**, rebuilt from scratch with orientations, density, filters, display options, and a TV mode | Click a card's name in Realtime status |
+
+Nothing was dropped. One page absorbed another, and the detail behind it was rebuilt.
+
+The **Overview** section of the sidebar is still there, and still holds Realtime Status, Incidents, and Analytics. It is the Overview *page* inside it that is gone.
+
+![Realtime status with one card per product, each showing its uptime bar chart, uptime percentage, and status badge. The sidebar Overview section now lists only Realtime status, Incidents, and Analytics](/images/realtime-status-cards.webp)
+
+<Note>
+  Old Overview links keep working. A bookmark, or a URL pasted in a runbook or a ticket, now redirects to Realtime status. There is nothing to update on your side.
+</Note>
+
+## Why Overview was removed
+
+**It showed the same data twice.** Overview and Realtime status both answered the same question, is everything healthy right now, from the same monitoring results. Two pages for one job meant every improvement had to be built twice, and the two drifted apart over time.
+
+**Overview was the weaker of the two.** It offered two fixed readings, by product or by test, plus a filter on zones. That was the whole extent of it. Anything you did there, Realtime status already did, with control Overview never had.
+
+**We kept the one that could grow.** Rather than maintain two pages for one job, we removed the one that had stopped evolving and put the effort into Realtime status and into the detail page behind it.
+
+## What you gain on Realtime status
+
+Moving from Overview to Realtime status is not a like for like swap. The page is yours to configure, and it remembers how you set it up.
+
+### Bars instead of continuous lines
+
+The cards no longer draw a continuous line. A line suggested a value at every instant, and monitors do not run at every instant: they run on their schedule. It drew data between two runs that never existed, and it smoothed over the periods where nothing ran at all.
+
+Bars say what actually happened. One bar per aggregation period, sized by the runs it contains, and a gap stays a gap instead of being joined by a line.
+
+### Everything else on the page
+
+| | What you get |
+|--|--------------|
+| **Saved views** | Each view is a tab, with its own filters, time range, and display settings. One per team or per purpose, so you stop rebuilding the same filters every morning. Rename, duplicate, reorder them, and set the one that loads by default. |
+| **Grouping** | Group results by product, test, or monitor. The List layout adds location and agent. |
+| **Two layouts** | Cards read from across the room, List packs many more monitors onto one screen. Lay either out in up to 5 columns. |
+| **A filter builder** | Rules on product, monitor, test, device, or status, chained with and/or and nestable in groups, so you can express "everything in this product except these three tests". |
+| **Your own period** | Presets from the last 2 hours to the last 12 months, a custom start and end, or a count of the most recent executions instead of a duration. |
+| **Highlight to zoom** | Highlight a range on any chart to narrow the view to that moment, and keep going until you have isolated it. |
+| **Live refresh** | A countdown shows the next automatic refresh. Pause it, or change the interval. |
+| **What the bars mean** | Show each item's status or its availability percentage, as stacked or 100% stacked bars, with periods that ran nothing shown or hidden. |
+| **A shareable view** | The view lives in the URL, so a link reopens it exactly as you left it, for you and for whoever you send it to. |
+
+Highlighting is the one in that list you cannot picture from the words. Press on a chart, sweep across the moment you care about, and the rest of the chart dims while your selection takes over the view.
+
+![One product card in Realtime status during a highlight. An orange rectangle frames a range of bars in the middle of the chart, and the bars outside it are dimmed](/images/realtime-status-highlight.webp)
+
+<Note>
+  Realtime status is a page in its own right, with more than fits here. See [Realtime status](/monitoring/realtime-status) for the full walkthrough.
+</Note>
+
+## What changed on Realtime details
+
+Realtime details is the rebuilt Status details, the page that opens when you click a card's name in Realtime status. The timeline it is built on is the same idea as before, one cell per monitor per period, rebuilt so you can shape it. Most of its controls carried straight over from Status details. The real addition is the Display menu.
+
+![Realtime details on the vertical timeline: the summary cards, the status legend, then one column per monitor with time running down the left edge and one cell per period](/images/realtime-details-vertical.webp)
+
+### The Display menu, the real addition
+
+One button holds everything about how the timeline is drawn. Status details had none of it.
+
+![The Display menu of Realtime details, open over a horizontal timeline, with the orientation switch at the top and three groups of toggles: Legend and markers, Table UI, Visible elements](/images/realtime-details-display-menu.webp)
+
+Two switches sit at the top, and they are the ones that change the most:
+
+- **Orientation**: Vertical timeline, the default, or Horizontal timeline. The vertical one puts each monitor in a column with time running down; the horizontal one puts each monitor on a row with time running across.
+- **Density**, on the vertical timeline only: Normal or Compact. Compact narrows the monitor columns so many more monitors fit on screen.
+
+![Two panels side by side. On the left, the vertical timeline: monitors A to D as columns, time running down. On the right, the horizontal timeline: the same monitors as rows, time running across. The same data, transposed](/images/realtime-details-orientations.webp)
+
+Below them, everything else is a toggle. Turn off what you never read and the page gets shorter and clearer.
+
+| Toggle | What it shows |
+|--------|---------------|
+| **Legend** | The color key above the timeline: Success, Warning, Failed, Device issue, Maintenance |
+| **Now line** | An orange marker on the bucket in progress, labelled `now` |
+| **Display percent** | The uptime percentage inside each bucket |
+| **Display labels** | The test type inside each bucket, `U` for USSD for example |
+| **Summary cards** | The row of cards above the table: Active monitors, Up, Warning, Down, Device issue, and the uptime over the period with its trend. Off gives the timeline the full height |
+| **Monitor ID** | The ID next to each monitor, `#2608` for example |
+| **Location** | The zone or agent for each column |
+| **24h trend** | The last 24 hours of each monitor, as a trend |
+| **Groups** | Groups the monitors by tag. The tag row disappears on its own when none of the visible monitors is tagged |
+
+Two more things you do not have to set. The **Monitors column is resizable**, so long names stay readable, and the page scrolls as one, with the table headers pinned so they stay visible as you go down.
+
+Hover any cell and a tooltip names the monitor, gives the exact period with its timezone, and counts the outcomes recorded in it, so a narrow column or a truncated name never leaves you guessing.
+
+### Inside a bucket, the real mix
+
+A bucket holds several executions, and they do not always agree. One failure among nine successes used to paint the whole cell yellow: it told you something had happened in there without telling you what, and it took the color that belongs to Warning, a real execution status.
+
+The bucket is now split in proportion to what ran, nine parts success and one part failed, so you read the ratio straight off the timeline. Yellow now means one thing only: an execution came back with a warning, which you set on a step from its [checks](/tests/builder#checks).
+
+### Click a cell to reach its executions
+
+Reading a timeline usually ends with the same question: what failed, and why. Click any cell and a drawer opens beside it, holding the executions recorded in that period for that monitor.
+
+It gives the monitor name, the exact period with its timezone, and how many of the runs passed. Below that, one row per execution, with its date, its time, its duration, and its own status. It is the shortest path from a red block to the run that caused it.
+
+![The executions drawer open beside the timeline. Its header carries the monitor name and the period with its timezone. Below, a summary row counts 3 of 6 tests, then one row per execution with its date, time and duration, each marked with its status](/images/realtime-details-executions-drawer.webp)
+
+### Your view follows you
+
+Your settings are remembered between visits, and the URL carries the view. A link reopens the page identically for whoever you share it with, same filters, same orientation, same options.
+
+### Faster on large products
+
+The page renders noticeably faster, including on a product that carries many monitors.
+
+The 24h trend column no longer redraws itself while the page sits open. On a screen left running all day, that flicker was the most visible flaw.
+
+The three sections below are not new. Status details already filtered, already carried a time range and an aggregation, and already had a TV mode. They are here because you will use them, not because they changed.
+
+### Filter down to what matters
+
+- **Filter by test**, with a search field to find a test by keyword.
+- **Filter monitors** by status, tag, and location, from the funnel icons in the **Monitors** and **Location** column headers. The location filter is where the zones you filtered on in Overview now live.
+- **Sort** the monitors from the arrow in the Monitors header.
+- When nothing matches, the table header and the filters stay in place, so you can correct the filter without rebuilding it.
+
+### Set the period and the granularity
+
+The page header carries the controls that decide what the timeline covers.
+
+- **Time range**: the period the timeline spans, Last 4h for example.
+- **Aggregation**: how much time one bucket holds, 10m for example. On long time ranges the finest aggregations are no longer offered, since they produced tables too dense to read.
+- **Export**: take the data behind the current view out of the page.
+
+### TV mode for ops screens
+
+A dark display, built for a screen the team walks past. It keeps the summary cards and the timeline, adds the current time and date, and drops everything else.
+
+![TV mode on Realtime details: a dark full-width display with the current time and date, the summary cards, and the monitor timeline below](/images/realtime-details-tv-mode.webp)
+
+- Turn it on with the **TV mode** button in the page header, or with `?tv=1` in the URL so a bookmark opens straight into it.
+- It hides the left navigation entirely to give the timeline the full window width.
+- It no longer takes over the whole screen, so you can watch two products side by side in two windows.
+- Leave it with **Exit TV**, top right, or the `Esc` key.
+
+## Set it up once
+
+Realtime details is worth configuring once rather than adjusting every morning.
+
+<Steps>
+  <Step title="Pick your orientation and density">
+
+    Vertical or horizontal, Normal or Compact. Start there, since it decides how many monitors fit on your screen.
+
+</Step>
+  <Step title="Filter down to what your team watches">
+
+    By test, then by status, tag, or location. A view that shows only what you act on is faster to read than one that shows everything.
+
+</Step>
+  <Step title="Turn off what you never read">
+
+    In the Display menu, hide the columns and markers you do not use. The page gets shorter and clearer.
+
+</Step>
+  <Step title="Bookmark it, or put it on a screen">
+
+    The URL carries the whole view, so a bookmark reopens it identically. Add `?tv=1` for a display screen.
+
+</Step>
+</Steps>
+
+<Tip>
+  Keep one bookmark per reading rather than reconfiguring the page each time: one per team, one per product, one for the TV. Each link reopens its own view instantly, for you and for anyone you send it to.
+</Tip>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="Realtime status" icon="monitor-waveform" href="/monitoring/realtime-status">
+
+    Build and save the status views your team watches every day
+
+</Card>
+  <Card title="Monitor details" icon="chart-line" href="/monitoring/monitor-details">
+
+    Dig into one monitor's availability, execution time, and failures
+
+</Card>
+</Columns>
