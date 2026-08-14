@@ -51,6 +51,11 @@
       "googlebot": "noindex, nofollow"
     }
   },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-61CX3HXZ0P"
+    }
+  },
   "navigation": {
     "languages": [
       {
