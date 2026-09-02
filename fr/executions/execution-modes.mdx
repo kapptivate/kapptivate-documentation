@@ -1,0 +1,42 @@
+---
+title: Modes d'exécution
+description: Choisissez la quantité de données collectées à chaque exécution, en arbitrant entre profondeur de capture et rapidité.
+sidebarTitle: Modes d'exécution
+---
+
+![The Run queue Advanced options with the Execution mode dropdown open on Fast, Standard, and Detailed](/images/execution-modes.webp)
+
+Chaque exécution capture des preuves : captures d'écran, vidéo, logs et métadonnées. En capturer davantage facilite le diagnostic d'un échec mais ralentit l'exécution. Le mode d'exécution est le seul curseur qui règle cet arbitrage : vous collectez tout ce qu'il faut pendant le débogage et vous restez rapide en production.
+
+## Les trois modes
+
+- **Fast** : collecte minimale, ni capture d'écran ni vidéo et des logs réduits. L'exécution se termine le plus vite possible. Idéal pour le monitoring en production, où vous vérifiez souvent un parcours et voulez seulement savoir s'il passe.
+- **Standard** (par défaut) : collecte équilibrée. Capture les médias nécessaires pour comprendre un échec sans beaucoup ralentir l'exécution. Le bon choix dans la plupart des cas.
+- **Detailed** : une capture d'écran avant et après chaque step, avec des logs détaillés et toutes les métadonnées. Idéal pour déboguer un test instable ou en échec, puisque vous voyez exactement à quoi ressemblait l'écran à chaque step. Ce mode ralentit nettement l'exécution : réservez-le à l'investigation, pas aux exécutions de routine.
+
+## Où le régler
+
+**Pour une exécution ponctuelle**, choisissez le mode dans le panneau **Run queue**, sous **Advanced options**, avant de lancer. Il s'applique à tous les tests du batch. Voir [Exécuter un test](/fr/executions/run).
+
+**Comme valeur par défaut d'un test**, réglez-le dans le builder sous **Test settings > Advanced > Execution mode**. Le test s'exécute alors dans ce mode partout où il est lancé, sauf si une exécution le surcharge.
+
+![The test builder Test settings tab with the Advanced section expanded on the Execution mode dropdown](/images/execution-mode-test-settings.webp)
+
+<Tip>
+Les monitors s'exécutent selon une planification, souvent plusieurs fois par jour. Gardez les tests monitorés en **Fast** ou **Standard** pour que ces exécutions fréquentes restent économiques, et passez en **Detailed** seulement le temps d'investiguer un échec.
+</Tip>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Exécuter un test" icon="play" href="/fr/executions/run">
+
+    Mettre des tests en file et choisir un mode d'exécution pour le batch
+
+</Card>
+  <Card title="Test builder" icon="vial" href="/fr/tests/builder">
+
+    Régler le mode d'exécution par défaut d'un test dans ses paramètres
+
+</Card>
+</Columns>
