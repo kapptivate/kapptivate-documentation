@@ -142,7 +142,8 @@
                       "monitoring/create",
                       "monitoring/scheduling",
                       "monitoring/monitor-details",
-                      "monitoring/realtime-status"
+                      "monitoring/realtime-status",
+                      "monitoring/status-details"
                     ]
                   },
                   {
@@ -352,6 +353,7 @@
                     "group": "Others",
                     "expanded": false,
                     "pages": [
+                      "tests/actions/web/apicall",
                       "tests/actions/web/customstep",
                       "tests/actions/web/setvariable",
                       "tests/actions/web/extractvalue"
@@ -1218,7 +1220,8 @@
                       "fr/monitoring/create",
                       "fr/monitoring/scheduling",
                       "fr/monitoring/monitor-details",
-                      "fr/monitoring/realtime-status"
+                      "fr/monitoring/realtime-status",
+                      "fr/monitoring/status-details"
                     ]
                   },
                   {
@@ -1428,6 +1431,7 @@
                     "group": "Autres",
                     "expanded": false,
                     "pages": [
+                      "fr/tests/actions/web/apicall",
                       "fr/tests/actions/web/customstep",
                       "fr/tests/actions/web/setvariable",
                       "fr/tests/actions/web/extractvalue"

@@ -1,0 +1,111 @@
+---
+title: Status Details
+description: La timeline derrière le statut en temps réel : tous les moniteurs d'un produit, intervalle par intervalle, avec regroupement, filtres et mode TV.
+sidebarTitle: Status Details
+---
+
+Le statut en temps réel répond à une question : est-ce que tout va bien en ce moment. Status Details répond à la suivante : que s'est-il passé, moniteur par moniteur, sur une période. Une ligne par moniteur et une cellule par intervalle de temps : la forme d'un incident (quels moniteurs, quelle zone, combien de temps) se lit d'un coup d'œil.
+
+## Ouvrir la page
+
+Cliquez sur le nom d'une carte dans le [statut en temps réel](/fr/monitoring/realtime-status). Le clic emporte ce que vous regardiez : la période, l'agrégation, et le test quand la vue est regroupée par test. Le fil d'Ariane en haut de page permet de changer de produit sans quitter la page.
+
+La page s'ouvre sur les 12 dernières heures avec une agrégation de 10 minutes, et replie la barre de navigation pour donner toute la largeur à la timeline. Votre préférence de barre latérale est rétablie en sortant.
+
+## Lire la timeline
+
+Chaque cellule couvre un moniteur sur un intervalle, colorée selon le pire statut de cet intervalle :
+
+- **Success**, **Warning**, **Failed**, **Device issue** et **Maintenance**. Activez **Legend** depuis le menu Display pour garder la légende des couleurs à l'écran.
+- Les intervalles sans exécution restent vides, avec "No execution" dans l'infobulle.
+- L'intervalle en cours affiche un état d'attente jusqu'à l'arrivée de ses résultats.
+
+Deux orientations, au choix depuis le menu Display :
+
+- **Vertical timeline** (par défaut) : les moniteurs en colonnes, le temps qui descend. C'est celle qui fait tenir le plus de moniteurs à l'écran.
+- **Horizontal timeline** : les moniteurs en lignes, le temps qui défile horizontalement.
+
+Ce que fait un clic :
+
+- **Une cellule avec une seule exécution** ouvre directement son résultat.
+- **Une cellule avec plusieurs exécutions** ouvre un drawer qui liste les exécutions de l'intervalle.
+- **Le nom d'un moniteur** ouvre la [page de détail du moniteur](/fr/monitoring/monitor-details).
+
+Faites glisser le bord de la colonne **Monitors** pour l'élargir quand les noms sont tronqués. Les libellés de groupe et l'en-tête du tableau restent épinglés au défilement.
+
+## Période et agrégation
+
+Le sélecteur de période propose des préréglages des 2 dernières heures aux 12 derniers mois, ou un début et une fin personnalisés. Le sélecteur d'agrégation à côté définit la taille des intervalles ; les valeurs proposées dépendent de la période, car les agrégations les plus fines donnent des tableaux illisibles sur les longues durées.
+
+En bas de la timeline, **Load more data** étend la période au préréglage supérieur, jusqu'aux 12 derniers mois. C'est le chemin le plus court pour passer de "ce matin" à "cette semaine" sans toucher au sélecteur.
+
+## Options d'affichage
+
+Le menu **Display** rassemble tout ce qui concerne la lecture du tableau :
+
+| Section | Option | Effet |
+|---------|--------|-------|
+| Orientation | Vertical / Horizontal timeline | Moniteurs en colonnes ou en lignes |
+| Legend & markers | Legend | Affiche la légende des couleurs et symboles |
+| Legend & markers | Now line | Repère orange sur l'heure courante |
+| Table UI | Display percent | Pourcentage d'uptime dans chaque intervalle |
+| Table UI | Display labels | Type de test dans chaque intervalle, par ex. U pour USSD |
+| Visible elements | Summary cards | Compteurs de moniteurs et uptime au-dessus du tableau |
+| Visible elements | Monitor ID | L'ID du moniteur à côté de son nom |
+| Visible elements | Location | La zone ou l'agent de chaque moniteur |
+| Visible elements | 24h trend | La tendance des 24 dernières heures par moniteur |
+| Grouping | Group by tag | Une bande par tag, disponible dès que des moniteurs sont taggés |
+| Grouping | Group by location | Une bande par zone |
+
+**Display percent** et **Display labels** se disputent la même place dans une cellule : activer l'un désactive l'autre.
+
+Par défaut : timeline verticale, regroupement par tag, Location et Now line activés, le reste désactivé. La page s'ouvre sur la timeline plutôt que sur les cartes de synthèse, ce qui est le bon réflexe pendant un incident.
+
+## Filtrer ce que vous surveillez
+
+Le menu **Filter** réduit les moniteurs affichés par **Test**, **Location**, **Tags** et **Status**. Test, Location et Tags sont dotés d'une recherche, donc un produit avec cent moniteurs reste exploitable. **Reset** remet tout à zéro.
+
+Les filtres sont mémorisés par produit : en revenant sur un produit, vous retrouvez les moniteurs que vous surveilliez.
+
+## Conserver et partager une vue
+
+Vos options d'affichage, le tri, l'agrégation et les filtres sont conservés d'une visite à l'autre, et l'URL de la page les emporte aussi. Copiez l'URL et la personne qui l'ouvre voit le même tableau, la même période, le même regroupement. Cela fait un lien solide à coller dans un ticket ou une procédure.
+
+## Mode TV
+
+**TV mode** transforme la page en écran mural : la navigation et l'en-tête disparaissent, la timeline prend toute la fenêtre. La barre du haut conserve un basculement jour/nuit et la sortie.
+
+Le mode ne s'approprie plus tout l'écran : deux fenêtres côte à côte permettent de surveiller deux produits en même temps.
+
+## Export
+
+**Export** télécharge la période et l'agrégation courantes en CSV, une ligne par moniteur et par intervalle, pour l'analyse qui a sa place dans un tableur.
+
+<Note>
+La page que Status Details remplace reste accessible sur `/overview/legacy`, avec un bandeau qui renvoie vers la nouvelle. Son retrait est prévu le 8 septembre 2026. Voir [Où est passée la page Overview ?](/fr/questions/overview-page-removed).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="Statut en temps réel" icon="chart-simple" href="/fr/monitoring/realtime-status">
+
+    Le mur de statut depuis lequel s'ouvre cette page, avec ses vues et ses mises en page
+
+</Card>
+  <Card title="Détail d'un moniteur" icon="magnifying-glass" href="/fr/monitoring/monitor-details">
+
+    Tout sur un moniteur : planification, historique et résultats
+
+</Card>
+  <Card title="Incidents" icon="triangle-exclamation" href="/fr/alerting/incidents">
+
+    Ce que devient une panne visible sur cette timeline une fois prise en charge par l'alerting
+
+</Card>
+  <Card title="Où est passée la page Overview ?" icon="circle-question" href="/fr/questions/overview-page-removed">
+
+    Ce qui remplace quoi, et pourquoi
+
+</Card>
+</Columns>
