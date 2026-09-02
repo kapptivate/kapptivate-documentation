@@ -4,6 +4,8 @@ description: The timeline behind Realtime status: every monitor of a product, bu
 sidebarTitle: Status Details
 ---
 
+![The Status Details page for a product: summary cards for active monitors, up, warning, down and device issue, then a vertical timeline with one column per monitor and time running down the page](/images/realtime-details-vertical.webp)
+
 Realtime status answers one question: is everything healthy right now. Status Details answers the next one: what happened, monitor by monitor, over a period. One row per monitor and one cell per time bucket, so the shape of an incident (which monitors, which zone, how long) is readable at a glance.
 
 ## Open the page
@@ -25,13 +27,19 @@ Two orientations, switched from the Display menu:
 - **Vertical timeline** (the default): monitors as columns, time running down the page. This is the one that fits the most monitors on screen.
 - **Horizontal timeline**: monitors as rows, time running across.
 
+![Side by side comparison of the two orientations: the vertical timeline with one column per monitor and time running down, and the horizontal timeline with one row per monitor and time running across](/images/realtime-details-orientations.webp)
+
 What a click does:
 
 - **A cell holding a single execution** opens that result directly.
 - **A cell holding several executions** opens a drawer listing the bucket's runs.
 - **A monitor's name** opens the [monitor details page](/monitoring/monitor-details).
 
+![The executions drawer opened on a bucket: the monitor name, the bucket's time window, and the list of runs with their status and duration](/images/realtime-details-executions-drawer.webp)
+
 Drag the edge of the **Monitors** column to widen it when names are truncated. Group labels and the table header stay pinned while you scroll.
+
+On the vertical timeline, the columns narrow themselves when the monitors would not otherwise fit the window width. There is no density setting to manage.
 
 ## Time range and aggregation
 
@@ -42,6 +50,8 @@ At the end of the timeline, **Load more data** extends the range to the next wid
 ## Display options
 
 The **Display** menu holds everything about how the table reads:
+
+![The Display menu open over the timeline, with the orientation cards at the top and the Legend and markers, Table UI, and Visible elements sections below](/images/realtime-details-display-menu.webp)
 
 | Section | Option | What it does |
 |---------|--------|--------------|
@@ -74,6 +84,8 @@ Your display options, sort, aggregation, and filters are kept between visits, an
 ## TV mode
 
 **TV mode** turns the page into a wall display: navigation and page header disappear, and the timeline takes the whole window. The top bar keeps a day/night switch and the way out.
+
+![Status Details in TV mode: a dark full-width display with the time and date, the summary cards, and the monitor timeline below](/images/realtime-details-tv-mode.webp)
 
 It no longer takes over the screen, so two browser windows side by side can watch two products at once.
 

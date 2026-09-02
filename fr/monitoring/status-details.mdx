@@ -4,6 +4,8 @@ description: La timeline derrière le statut en temps réel : tous les moniteurs
 sidebarTitle: Status Details
 ---
 
+![La page Status Details d'un produit : les cartes de synthèse (moniteurs actifs, up, warning, down, device issue) puis une timeline verticale avec une colonne par moniteur et le temps qui descend](/images/realtime-details-vertical.webp)
+
 Le statut en temps réel répond à une question : est-ce que tout va bien en ce moment. Status Details répond à la suivante : que s'est-il passé, moniteur par moniteur, sur une période. Une ligne par moniteur et une cellule par intervalle de temps : la forme d'un incident (quels moniteurs, quelle zone, combien de temps) se lit d'un coup d'œil.
 
 ## Ouvrir la page
@@ -25,13 +27,19 @@ Deux orientations, au choix depuis le menu Display :
 - **Vertical timeline** (par défaut) : les moniteurs en colonnes, le temps qui descend. C'est celle qui fait tenir le plus de moniteurs à l'écran.
 - **Horizontal timeline** : les moniteurs en lignes, le temps qui défile horizontalement.
 
+![Les deux orientations côte à côte : la timeline verticale avec une colonne par moniteur et le temps qui descend, et l'horizontale avec une ligne par moniteur et le temps qui défile](/images/realtime-details-orientations.webp)
+
 Ce que fait un clic :
 
 - **Une cellule avec une seule exécution** ouvre directement son résultat.
 - **Une cellule avec plusieurs exécutions** ouvre un drawer qui liste les exécutions de l'intervalle.
 - **Le nom d'un moniteur** ouvre la [page de détail du moniteur](/fr/monitoring/monitor-details).
 
+![Le drawer des exécutions ouvert sur un intervalle : le nom du moniteur, la fenêtre de temps de l'intervalle et la liste des exécutions avec leur statut et leur durée](/images/realtime-details-executions-drawer.webp)
+
 Faites glisser le bord de la colonne **Monitors** pour l'élargir quand les noms sont tronqués. Les libellés de groupe et l'en-tête du tableau restent épinglés au défilement.
+
+Sur la timeline verticale, les colonnes se resserrent d'elles-mêmes quand les moniteurs ne tiendraient pas dans la largeur de la fenêtre. Il n'y a pas de réglage de densité à gérer.
 
 ## Période et agrégation
 
@@ -42,6 +50,8 @@ En bas de la timeline, **Load more data** étend la période au préréglage sup
 ## Options d'affichage
 
 Le menu **Display** rassemble tout ce qui concerne la lecture du tableau :
+
+![Le menu Display ouvert au-dessus de la timeline, avec le sélecteur d'orientation en haut et les sections Legend and markers, Table UI et Visible elements en dessous](/images/realtime-details-display-menu.webp)
 
 | Section | Option | Effet |
 |---------|--------|-------|
@@ -75,6 +85,8 @@ Vos options d'affichage, le tri, l'agrégation et les filtres sont conservés d'
 
 **TV mode** transforme la page en écran mural : la navigation et l'en-tête disparaissent, la timeline prend toute la fenêtre. La barre du haut conserve un basculement jour/nuit et la sortie.
 
+![Status Details en mode TV : un affichage sombre pleine largeur avec l'heure et la date, les cartes de synthèse et la timeline des moniteurs en dessous](/images/realtime-details-tv-mode.webp)
+
 Le mode ne s'approprie plus tout l'écran : deux fenêtres côte à côte permettent de surveiller deux produits en même temps.
 
 ## Export
@@ -85,7 +97,7 @@ Le mode ne s'approprie plus tout l'écran : deux fenêtres côte à côte permet
 La page que Status Details remplace reste accessible sur `/overview/legacy`, avec un bandeau qui renvoie vers la nouvelle. Son retrait est prévu le 8 septembre 2026. Voir [Où est passée la page Overview ?](/fr/questions/overview-page-removed).
 </Note>
 
-## What's Next?
+## Et ensuite ?
 
 <Columns cols={2}>
   <Card title="Statut en temps réel" icon="chart-simple" href="/fr/monitoring/realtime-status">
