@@ -54,7 +54,14 @@ Ce sur quoi vous pouvez porter une condition :
 | Response time | La requête entière sous un seuil |
 | DNS lookup time, TCP/TLS connection time, Time to first byte, Content transfer time | Identifier quelle phase est lente, pas seulement qu'elle l'est |
 
-Les opérateurs couvrent **is exactly**, **is not exactly**, **contains**, **does not contain**, **starts with**, **ends with**, **matches JSON**, **matches regex**, **is valid JSON**, **is valid XML**, **is present** et **is not present**. Les champs de durée sont accompagnés d'un sélecteur ms, secondes ou minutes.
+Les opérateurs dépendent du champ :
+
+- **Texte** (status text, la valeur d'un header, le corps) : **is exactly**, **contains**, **starts with**, **ends with**.
+- **Le corps** ajoute **matches JSON**, **matches regex**, **is valid JSON** et **is valid XML**.
+- **Un header** ajoute **is present** et **is not present**, pour tester la présence du header plutôt que sa valeur.
+- **Les nombres** (status code et tous les temps) se comparent avec `=`, `<`, `≤`, `>` et `≥`. Les durées sont accompagnées d'un sélecteur ms, secondes ou minutes.
+
+Dans le groupe Warnings, une condition se lit comme le déclencheur et non comme l'attendu : « Warns if > 10s » est la même condition qu'une condition de succès écrite `≤ 10s`.
 
 <Tip>
 Exécutez le test une fois avant d'écrire vos conditions. **Pick a field...** liste alors les attributs de la dernière réponse, et **Open in full view** ouvre une liste avec recherche où vous pouvez cocher plusieurs attributs et les ajouter tous en une fois.

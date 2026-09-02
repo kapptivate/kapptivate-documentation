@@ -1,0 +1,81 @@
+---
+title: Success, warning, failed
+description: What a warning means, where it comes from, and how it travels from a step to a monitor.
+sidebarTitle: Statuses
+---
+
+A test used to answer yes or no: it passed, or it broke. Checks added a third answer. A page that loads in nine seconds instead of two is not broken, but you want to know. That is what **warning** is for: something is off, the journey still works.
+
+## Where a warning comes from
+
+Nothing raises a warning on its own. A warning exists because you wrote a condition for it, in a step's **Checks** tab, which holds two groups:
+
+- **Success conditions**, read as "Passes if". The step fails when one of them is not met.
+- **Warnings**, read as "Warns if". The step still passes, and the run is flagged.
+
+Drag a condition from one group to the other, or use its menu (**Move to warnings**, **Move to success conditions**), to change how much a given problem should cost. Each group has its own **and** / **or** logic, and conditions can be nested into groups when a rule needs both.
+
+<Note>
+Existing tests have no checks, so they can only report success or failure. A test starts reporting warnings once you add conditions to it.
+</Note>
+
+What you can write a condition on depends on the step:
+
+| Step | Fields available |
+|------|------------------|
+| Navigate to starting page | URL, Loading time |
+| Any other browser step | URL, Step duration |
+| [API Call](/tests/actions/web/apicall) | Status code, status text, response header, response body, and the response timings |
+| Get mail | Sender, recipient, CC, subject, content, attachments, attachment name |
+| Check PDF | Extracted text, page count, file size, file name |
+
+## The same three words at every level
+
+| Level | Success | Warning | Failed |
+|-------|---------|---------|--------|
+| Step | Every success condition met | A condition in the Warnings group was triggered | A success condition was not met |
+| Execution | All tests passed | All tests passed, at least one with a warning | At least one test failed |
+| Monitor | **Success** | **Degraded**, in yellow | **Failed** |
+
+A monitor has three more states that say nothing about your application: **Device issue** (the agent or device broke, so the run proves nothing), **Paused**, **Running**, and **Scheduled**.
+
+## What a warning actually changes
+
+**The run continues.** A warning never stops a test, and never stops the next test in a campaign.
+
+**The execution is filed as a warning**, and the executions list filters on that status, so a weekly look at warnings is one click.
+
+**The monitor turns Degraded**, in yellow, in the monitors list and on [Realtime status](/monitoring/realtime-status).
+
+**The bucket turns yellow** on [Status Details](/monitoring/status-details), where a warning outranks a success: a bucket holding both reads as a warning.
+
+**Uptime counts warnings as downtime.** The uptime percentage is successful runs over all runs, so a monitor that only warns still loses uptime. Reach for a warning when you want to be told, not when you want the number to stay green.
+
+<Warning>
+The **Warning** severity of an [alert](/alerting/alerts) is a different thing. Alert severities come from the thresholds you set on a metric, not from a test's checks. A test can warn without raising any alert, and an alert can be critical on a test that never warned.
+</Warning>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="Web actions" icon="list" href="/tests/actions/web/overview">
+
+    The steps that can carry checks, and what each one records
+
+</Card>
+  <Card title="Executions list" icon="list-check" href="/executions/overview">
+
+    Filter runs by status and open the one you want
+
+</Card>
+  <Card title="Status Details" icon="chart-simple" href="/monitoring/status-details">
+
+    Where a yellow bucket shows up, monitor by monitor
+
+</Card>
+  <Card title="Alerts" icon="bell" href="/alerting/alerts">
+
+    Thresholds and their own warning and critical levels
+
+</Card>
+</Columns>

@@ -131,7 +131,8 @@
                     "expanded": false,
                     "pages": [
                       "executions/overview",
-                      "executions/results"
+                      "executions/results",
+                      "executions/statuses"
                     ]
                   },
                   {
@@ -1209,7 +1210,8 @@
                     "expanded": false,
                     "pages": [
                       "fr/executions/overview",
-                      "fr/executions/results"
+                      "fr/executions/results",
+                      "fr/executions/statuses"
                     ]
                   },
                   {

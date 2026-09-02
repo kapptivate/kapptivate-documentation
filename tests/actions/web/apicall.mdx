@@ -54,7 +54,14 @@ What you can assert on:
 | Response time | Whole request under a threshold |
 | DNS lookup time, TCP/TLS connection time, Time to first byte, Content transfer time | Pin down which phase is slow, not just that it is |
 
-Operators cover **is exactly**, **is not exactly**, **contains**, **does not contain**, **starts with**, **ends with**, **matches JSON**, **matches regex**, **is valid JSON**, **is valid XML**, **is present**, and **is not present**. Duration fields come with a ms, seconds, or minutes picker.
+The operators depend on the field:
+
+- **Text** (status text, a header's value, the body): **is exactly**, **contains**, **starts with**, **ends with**.
+- **The body** adds **matches JSON**, **matches regex**, **is valid JSON**, and **is valid XML**.
+- **A header** adds **is present** and **is not present**, to assert on the header itself rather than its value.
+- **Numbers** (status code and every timing) compare with `=`, `<`, `≤`, `>`, and `≥`. Durations come with a ms, seconds, or minutes picker.
+
+In the Warnings group, a condition reads as the trigger rather than the expectation: "Warns if > 10s" is the same condition as a success condition written `≤ 10s`.
 
 <Tip>
 Run the test once before writing your conditions. **Pick a field...** then lists the attributes of the last response, and **Open in full view** opens a searchable list where you can tick several attributes and add them all as conditions in one go.

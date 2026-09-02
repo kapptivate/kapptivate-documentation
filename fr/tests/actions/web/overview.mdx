@@ -76,11 +76,13 @@ Les steps qui ciblent un élément partagent également les paramètres IA : une
 
 Les steps d'interaction et de navigation peuvent porter des **vérifications**, évaluées juste après l'exécution du step :
 
-- **URL** : l'adresse de la page correspond (ou ne correspond pas) à un motif.
-- **Temps de chargement** : le chargement de la page reste sous un seuil.
+- **URL** : l'adresse de la page est exactement, contient, commence par ou finit par une valeur.
+- **Temps de chargement** : sur le step de page de départ, le chargement de la page reste sous un seuil.
 - **Durée du step** : le step lui-même reste sous un seuil.
 
-Chaque vérification est définie en mode **erreur** (un échec de la vérification fait échouer le step) ou **avertissement** (le step réussit mais est signalé). Les valeurs attendues et réelles apparaissent dans les résultats de l'exécution.
+L'onglet Checks les range en deux groupes : **Success conditions**, qui font échouer le step quand elles ne sont pas remplies, et **Warnings**, qui signalent l'exécution sans la faire échouer. Chaque groupe a sa propre logique and / or. Les valeurs attendues et réelles apparaissent dans les résultats de l'exécution.
+
+Voir [Success, warning, failed](/fr/executions/statuses) pour ce qu'un warning provoque sur l'exécution et sur le monitor derrière.
 
 ## Des résultats à l'analytique
 

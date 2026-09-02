@@ -76,11 +76,13 @@ Steps that target an element also share the AI settings: a plain-language **desc
 
 Interactions and navigation steps can carry **checks**, evaluated right after the step runs:
 
-- **URL**: the page address matches (or doesn't match) a pattern.
-- **Loading time**: the page load stays under a threshold.
+- **URL**: the page address is exactly, contains, starts with, or ends with a value.
+- **Loading time**: on the starting page step, the page load stays under a threshold.
 - **Step duration**: the step itself stays under a threshold.
 
-Each check is set to **error** (a failing check fails the step) or **warning** (the step passes but is flagged). Expected and actual values land in the run results.
+The Checks tab holds them in two groups: **Success conditions**, which fail the step when they are not met, and **Warnings**, which flag the run without failing it. Each group has its own and / or logic. Expected and actual values land in the run results.
+
+See [Success, warning, failed](/executions/statuses) for what a warning does to the execution and to the monitor behind it.
 
 ## From results to analytics
 
