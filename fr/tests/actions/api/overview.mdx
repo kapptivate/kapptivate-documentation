@@ -15,6 +15,8 @@ Les actions API HTTP sont disponibles dans les tests existants :
 
 Les deux partagent la même configuration de requête et le même modèle d'assertion sur les réponses, avec quelques différences de routage spécifiques au canal.
 
+Dans un test **Web (New experience)**, il s'agit du [step API Call](/fr/tests/actions/web/apicall) : la même requête, plus des conditions sur la réponse dans l'onglet Checks du step et une visualisation de la réponse dans le builder comme dans les résultats. `ETH_HTTP_API` reste ce que vous adressez dans les tests classiques et via le [CLI](/fr/cli/guides/create-tests) et le MCP.
+
 ## Configuration de la requête
 
 - **Méthodes HTTP** : `GET`, `POST`, `PUT`, `PATCH`, `DELETE`.
