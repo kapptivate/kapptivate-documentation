@@ -29,6 +29,7 @@ Click Create Preset in the Presets list. Fill in the About tab, then configure o
 
 Optional:
 - **Version**: browser version (if needed)
+- **Use as the default browser preset**: pre-select this preset on every new web test (see [Set a default preset](#set-a-default-preset))
 
 **Headers section**: add HTTP headers (not available on Firefox).
 - Key-value pairs
@@ -55,13 +56,32 @@ Optional:
 
 The Presets list shows all presets in a table with columns: Name, Browser, Device, Language, Screen size, Timezone, and Actions.
 
-**System presets** (provided by Kapptivate) are marked as default. You can view and duplicate them, but cannot edit or delete them.
+**System presets** (provided by Kapptivate) carry the **System** tag. You can view and duplicate them, but cannot edit or delete them.
 
 **Custom presets** can be edited by clicking the preset and modifying any field. Changes save immediately.
 
+## Set a default preset
+
+New web tests start on a system preset (Chrome, English). If your team always tests in another language or on another browser, designate one of your own presets as the default and it gets pre-selected instead.
+
+Two ways to designate it:
+
+- **At creation**: tick **Use as the default browser preset** in the About section.
+- **From the list**: open the preset's three-dot menu and choose **Set as default**.
+
+The designated preset carries the **Default** tag. Only one preset is the default at a time, so designating another one moves the tag. To go back to the system preset, open the three-dot menu and choose **Remove default**.
+
+The default has to be one of your own presets. On a system preset, **Set as default** is greyed out: duplicate it first, then designate the copy.
+
+<Note>
+The default applies to web tests you create in the interface. Monitors, campaign overrides, and tests created through the API or MCP keep the system preset.
+</Note>
+
 ## Apply a preset to a test
 
-When creating or editing a web test, choose a browser preset in the test's configuration. The test will run with all the settings you defined in the preset, no need to reconfigure each time.
+When creating or editing a web test, choose a browser preset in the test's configuration. A new test opens on the default preset, so a team that always tests in the same conditions has nothing to change. The test will run with all the settings you defined in the preset, no need to reconfigure each time.
+
+The selector opened from a test offers the same actions as the list (edit, duplicate, delete, set or remove the default) and shows which preset is the default one.
 
 ## Browser-specific limitations
 

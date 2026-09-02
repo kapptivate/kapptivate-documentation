@@ -29,6 +29,7 @@ Cliquez sur Create Preset dans la liste des Presets. Remplissez l'onglet About, 
 
 Optionnel :
 - **Version** : version du navigateur (si nécessaire)
+- **Use as the default browser preset** : présélectionne ce preset sur chaque nouveau test web (voir « Définir le preset par défaut » plus bas)
 
 **Section Headers** : ajoutez des headers HTTP (non disponible sur Firefox).
 - Paires clé-valeur
@@ -55,13 +56,32 @@ Optionnel :
 
 La liste des Presets affiche tous les presets dans un tableau avec les colonnes : Nom, Browser, Appareil, Langue, Taille d'écran, Fuseau horaire et Actions.
 
-**Les presets système** (fournis par Kapptivate) sont marqués comme défaut. Vous pouvez les consulter et les dupliquer, mais pas les modifier ni les supprimer.
+**Les presets système** (fournis par Kapptivate) portent l'étiquette **System**. Vous pouvez les consulter et les dupliquer, mais pas les modifier ni les supprimer.
 
 **Les presets personnalisés** peuvent être modifiés en cliquant sur le preset et en changeant n'importe quel champ. Les modifications sont enregistrées immédiatement.
 
+## Définir le preset par défaut
+
+Un nouveau test web démarre sur un preset système (Chrome, anglais). Si votre équipe teste toujours dans une autre langue ou sur un autre navigateur, désignez l'un de vos presets comme défaut : c'est lui qui sera présélectionné.
+
+Deux façons de le désigner :
+
+- **À la création** : cochez **Use as the default browser preset** dans la section About.
+- **Depuis la liste** : ouvrez le menu à trois points du preset et choisissez **Set as default**.
+
+Le preset désigné porte l'étiquette **Default**. Un seul preset est le défaut à la fois : en désigner un autre déplace l'étiquette. Pour revenir au preset système, ouvrez le menu à trois points et choisissez **Remove default**.
+
+Le défaut doit être l'un de vos presets. Sur un preset système, **Set as default** est grisé : dupliquez-le d'abord, puis désignez la copie.
+
+<Note>
+Le défaut s'applique aux tests web que vous créez dans l'interface. Les monitors, les overrides de campagne et les tests créés via l'API ou le MCP conservent le preset système.
+</Note>
+
 ## Appliquer un preset à un test
 
-Lors de la création ou de la modification d'un test web, choisissez un browser preset dans la configuration du test. Le test s'exécutera avec tous les paramètres définis dans le preset, sans avoir à les reconfigurer à chaque fois.
+Lors de la création ou de la modification d'un test web, choisissez un browser preset dans la configuration du test. Un nouveau test s'ouvre sur le preset par défaut : une équipe qui teste toujours dans les mêmes conditions n'a rien à changer. Le test s'exécutera avec tous les paramètres définis dans le preset, sans avoir à les reconfigurer à chaque fois.
+
+Le sélecteur ouvert depuis un test propose les mêmes actions que la liste (modifier, dupliquer, supprimer, définir ou retirer le défaut) et indique quel preset est le défaut.
 
 ## Limitations spécifiques aux navigateurs
 
