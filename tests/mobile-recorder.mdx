@@ -23,6 +23,14 @@ Start from the **Tests** dashboard so the recording lands in a new test.
   </Step>
 </Steps>
 
+## While you record
+
+Three controls sit next to the stream:
+
+- **Pause** freezes the recording without closing the session, so you can navigate the app freely (dismiss a popup, get back to the right screen) without turning your detour into steps. **Resume** picks the recording back up.
+- **Fill input** needs no dedicated action: tap a field on the device and the recorder creates the step, with a banner reminding you that you can type the value straight from your keyboard.
+- **Inspect the XML tree** opens the screen's hierarchy when a tap is not enough. Pick an element in the tree or directly on the screenshot, read its XPath, choose the action to build (**Wait for element**, **Tap on element**, or **Fill input**), add a value if the action takes one, and **Add step** drops it into the test. It is the way in for an element you cannot reach by tapping, or when you want the selector before the gesture.
+
 ## Tune selectors and add assertions
 
 Each recorded step shows the selector it targets (for example `id=...` or `content-desc=...`) right in the step row. When the automatic choice is fragile, open the selector's inline dropdown and pick a clearer match.

@@ -23,6 +23,14 @@ Partez du tableau de bord **Tests** pour que l'enregistrement aboutisse dans un 
   </Step>
 </Steps>
 
+## Pendant l'enregistrement
+
+Trois commandes accompagnent le stream :
+
+- **Pause** gèle l'enregistrement sans fermer la session : vous pouvez naviguer librement dans l'application (fermer une popup, revenir au bon écran) sans que ce détour devienne des steps. **Resume** reprend l'enregistrement.
+- **Fill input** ne demande aucune action dédiée : tapez un champ sur l'appareil et le recorder crée le step, avec un bandeau qui rappelle que vous pouvez saisir la valeur directement au clavier.
+- **Inspect the XML tree** ouvre la hiérarchie de l'écran quand un tap ne suffit pas. Choisissez un élément dans l'arbre ou directement sur la capture, lisez son XPath, choisissez l'action à construire (**Wait for element**, **Tap on element** ou **Fill input**), ajoutez une valeur si l'action en attend une, et **Add step** l'insère dans le test. C'est la porte d'entrée pour un élément qu'on n'atteint pas au doigt, ou quand vous voulez le sélecteur avant le geste.
+
 ## Ajuster les sélecteurs et ajouter des assertions
 
 Chaque step enregistré affiche le sélecteur qu'il cible (par exemple `id=...` ou `content-desc=...`) directement dans la ligne du step. Lorsque le choix automatique est fragile, ouvrez le menu déroulant du sélecteur et choisissez une correspondance plus claire.

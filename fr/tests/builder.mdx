@@ -51,6 +51,8 @@ Les tests Smartphone s'enregistrent via un recorder basé sur le cloud au lieu d
 
 Cliquez sur **Add step...** en bas d'un step group pour insérer un step sans enregistrement. Un menu avec recherche organise les actions par catégorie : **Most popular**, **Interactions**, **Email & SMS**, **Verifications**, **Navigation**, **Wait for...** et **Others**. Choisissez l'action, puis configurez sa cible et sa valeur. Consultez la [Bibliothèque d'actions](/fr/tests/actions/overview) pour tous les steps disponibles.
 
+Pour ajouter un step au milieu d'un groupe plutôt qu'à la fin, survolez l'espace entre deux steps : un **+** apparaît sur la ligne qui les sépare et ouvre le même menu, en insérant le nouveau step à cet endroit.
+
 Le menu contextuel de chaque step vous permet de le modifier, le dupliquer ou le supprimer, et vous pouvez glisser les steps pour les réordonner.
 
 ## Step groups
@@ -131,7 +133,9 @@ L'onglet **Test settings** rassemble tout ce qui s'applique à l'ensemble du tes
 - **AI** : le toggle IA et la stratégie au niveau du test
 - **Delays & timeouts** : **Step delay** (pause entre les steps, en secondes) et **Selector timeout** (attente maximale pour un élément, en secondes)
 - **Hooks** : step groups de cycle de vie (voir ci-dessous)
-- **Advanced** : le [mode d'exécution](/fr/executions/execution-modes) par défaut du test (la quantité de données collectées à chaque exécution), l'acceptation des certificats non sécurisés et les capabilities personnalisées
+- **Advanced** : le [mode d'exécution](/fr/executions/execution-modes) par défaut du test (la quantité de données collectées à chaque exécution), l'acceptation des certificats non sécurisés, les capabilities personnalisées et **Reset all selectors**
+
+**Reset all selectors** efface tous les sélecteurs que l'IA a trouvés et mis en cache dans ce test : la prochaine exécution recherchera les éléments. Utile après une refonte, quand les sélecteurs en cache visent des éléments qui n'existent plus. Les steps qui viennent d'un [reusable component](/fr/tests/reusable-components) conservent leurs propres sélecteurs.
 
 ### Hooks
 
