@@ -1063,7 +1063,7 @@
                 "expanded": true,
                 "pages": [
                   "guides/overview",
-                                    "guides/web-create-test",
+                  "guides/web-create-test",
                   "guides/web-update-tests",
                   "guides/web-step-types",
                   "guides/smartphone-create-scenario",
@@ -2142,7 +2142,7 @@
                 "expanded": true,
                 "pages": [
                   "fr/guides/overview",
-                                    "fr/guides/web-create-test",
+                  "fr/guides/web-create-test",
                   "fr/guides/web-update-tests",
                   "fr/guides/web-step-types",
                   "fr/guides/smartphone-create-scenario",

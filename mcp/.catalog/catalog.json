@@ -3,7 +3,7 @@
     "kind": "mcp",
     "source": "mcp-live",
     "serverName": "ktm",
-    "serverVersion": "1.4.0-beta.5",
+    "serverVersion": "1.5.0-beta.7",
     "count": 105
   },
   "items": [
@@ -490,7 +490,7 @@
       "category": "Test Management",
       "categorySlug": "test-management",
       "summary": "Create a new test from a JSON definition.",
-      "description": "Create a new test from a JSON definition. Runs structural validation before submitting. Product slug is resolved to ID + root collection UID automatically.\n\nV3 buckets: every non-global input_variable gets an auto-resolved bucket pointing at (variable_group, variant). Pass variants=[\"API:Staging\", \"Database:Replica\"] (repeatable forms: numeric variant ID or 'group:variant' name) to pin specific variants per group; groups not pinned use their default variant. Globals always emit {type:\"global\"}.\n\nKind validation: declared input_variable.kind must match the platform's variable type (1/3 → \"regular\", 2 → \"secret\"). Mismatches are hard errors by default. Pass auto_correct_kinds=true to rewrite mismatches in-place.\n\nPREREQUISITE: call platform_guide topic=test_creation for the full workflow, owner mapping, and variable substitution rules.\nWorkflow: list_action_types → get_test_template → list_resources → customize → validate_test → create_test.",
+      "description": "Create a new test from a JSON definition. Runs structural validation before submitting. Product slug is resolved to ID + root collection UID automatically.\n\nV3 buckets: every non-global input_variable gets an auto-resolved bucket pointing at (variable_group, variant). Pass variants=[\"API:Staging\", \"Database:Replica\"] (repeatable forms: numeric variant ID or 'group:variant' name) to pin specific variants per group; groups not pinned use their default variant. Globals always emit {type:\"global\"}.\n\nKind validation: declared input_variable.kind must match the platform's variable type (1/3 → \"regular\", 2 → \"secret\"). Mismatches are hard errors by default. Pass auto_correct_kinds=true to rewrite mismatches in-place.\n\nskip_validation=true bypasses the client-side validator. Use only when the test has an action type this MCP server's registry doesn't know yet (future types) — the platform still validates. V3 bucket resolution still runs even when skipped (the API requires buckets on create, unlike edit there is no existing test to inherit them from).\n\nPREREQUISITE: call platform_guide topic=test_creation for the full workflow, owner mapping, and variable substitution rules.\nWorkflow: list_action_types → get_test_template → list_resources → customize → validate_test → create_test.",
       "annotations": {
         "title": "Create Test",
         "readOnlyHint": false,
@@ -523,6 +523,14 @@
           "product": {
             "description": "Product slug (resolved to ID + root collection UID automatically)",
             "type": "string"
+          },
+          "skip_validation": {
+            "description": "Bypass the client-side validator (the platform still validates). Use for action types the registry doesn't recognise yet. V3 bucket resolution still runs — the API requires buckets on create. Also disables the kind=2 reusable V2-format check.",
+            "type": "boolean"
+          },
+          "tags": {
+            "description": "Optional tags to set on the test at creation, e.g. [\"smoke\",\"checkout\"]. Tag at creation — otherwise the test lands untagged and needs a follow-up edit_test.",
+            "type": "array"
           },
           "variables": {
             "description": "JSON variables object with input_variables, output_variables, owners",
@@ -649,7 +657,7 @@
       "inputSchema": {
         "properties": {
           "acknowledge": {
-            "description": "Must be true for destructive actions (trash, archive)",
+            "description": "Must be true for destructive actions (trash, archive). Also resets the lifecycle edit budget when the limit is reached",
             "type": "boolean"
           },
           "action": {
@@ -713,7 +721,7 @@
       "category": "Test Editing",
       "categorySlug": "test-editing",
       "summary": "Apply changes to an existing test.",
-      "description": "Apply changes to an existing test. DESTRUCTIVE — creates a new version automatically.\n\nPREREQUISITE: call platform_guide topic=test_editing for the guardrailed workflow and protected fields.\nALWAYS preview first with preview_test_edit to check impact.\nProtected fields: product and collection_uid are NEVER changed. Name and description only change when explicitly provided.\nA per-test edit limit is enforced (5 per session). Check edits_remaining in the response.\n\nTop-level metadata that's now always preserved on PUT and editable via this tool: archived, is_favorite, status. Pass archived=true to archive the test without touching actions; use manage_test_lifecycle action=archive (or action=unarchive) for the common case.\n\nskip_validation=true bypasses the client-side validator. Use only when the test has an action type this MCP server's registry doesn't know (future types), or when you're only flipping a top-level flag like archived. The platform still validates.",
+      "description": "Apply changes to an existing test. DESTRUCTIVE — creates a new version automatically.\n\nPREREQUISITE: call platform_guide topic=test_editing for the guardrailed workflow and protected fields.\nALWAYS preview first with preview_test_edit to check impact.\nProtected fields: product and collection_uid are NEVER changed. Name and description only change when explicitly provided.\nA per-test edit limit is enforced (5). Check edits_remaining in the response.\n\nTop-level metadata that's now always preserved on PUT and editable via this tool: archived, is_favorite, status. Pass archived=true to archive the test without touching actions; use manage_test_lifecycle action=archive (or action=unarchive) for the common case.\n\nskip_validation=true bypasses the client-side validator. Use only when the test has an action type this MCP server's registry doesn't know (future types), or when you're only flipping a top-level flag like archived. The platform still validates.",
       "annotations": {
         "title": "Edit Test",
         "readOnlyHint": false,
@@ -854,6 +862,10 @@
           "name": {
             "description": "New test name (only if explicitly changing it)",
             "type": "string"
+          },
+          "skip_validation": {
+            "description": "Bypass the client-side validator (the platform still validates). Use for action types the CLI doesn't recognise or top-level metadata edits. Match this to the edit_test call you are previewing so the preview and apply run the same path.",
+            "type": "boolean"
           },
           "test_id": {
             "description": "ID of the test to preview changes for",
@@ -1199,7 +1211,7 @@
             "type": "boolean"
           },
           "max_poll_duration": {
-            "description": "Maximum time to wait for results (default: 10m). Format: Go duration string (e.g. 5m, 15m)",
+            "description": "Maximum time to wait for results (default: 10m). Format: duration string (e.g. 5m, 15m)",
             "type": "string"
           },
           "overrides": {
@@ -1294,7 +1306,7 @@
       "category": "Results",
       "categorySlug": "results",
       "summary": "Get detailed results of a test execution (campaign or Tests-campaign runs).",
-      "description": "Get detailed results of a test execution (campaign or Tests-campaign runs). Returns metadata, tests_overview, and execution_summary with per-test/per-action status, duration, variables, and error messages — sufficient for diagnosing failures and analyzing performance. Set include_full_json=true only when you need step-level details (selectors, HTTP payloads). For monitoring (scheduled) runs use get_monitoring_result instead.",
+      "description": "Get detailed results of a test execution (campaign or Tests-campaign runs). Returns metadata plus a per-test view: execution_summary (per-test/per-action status, duration, variables, error messages) when the execution's JSON is available, or a lightweight tests_overview for queued/running results without it. Failed tests are always included; surplus passing tests may be elided in very large campaigns (see tests_elided / tests_overview_omitted). Set include_full_json=true when you need step-level details (selectors, HTTP payloads) or the complete per-test list. For monitoring (scheduled) runs use get_monitoring_result instead.",
       "annotations": {
         "title": "Get Execution Detail",
         "readOnlyHint": true,
@@ -2742,7 +2754,7 @@
       "category": "Monitor Management",
       "categorySlug": "monitor-management",
       "summary": "Apply changes to an existing monitor.",
-      "description": "Apply changes to an existing monitor. ALWAYS preview first with preview_monitor_edit.\n\nAuto-migration:\n  Legacy monitors (variable_group != 0 or input_variables lack buckets)\n  auto-migrate to V3 form on edit: every input_variable gets a bucket,\n  and the legacy variable_group field is cleared. The migration is\n  idempotent — re-editing an already-V3 monitor is a no-op on the bucket\n  side. Migration is unconditional: it's correct by construction, so\n  there is no opt-out.\n\n  When the underlying test references multiple variable groups, variables\n  in groups OTHER than the legacy variable_group use their own group's\n  default variant (unless variants overrides). Use the variants array to\n  pin non-default variants for specific groups during the migration edit.\n\nProtected fields: test_id and product_id CANNOT be changed (locked by the API). To change the underlying test, delete the monitor and create a new one.\nA per-monitor edit limit is enforced (10 per session). Check edits_remaining in the response.\nIf this fails with HTTP 400/404, the monitor may have been deleted — verify with get_monitor first.",
+      "description": "Apply changes to an existing monitor. ALWAYS preview first with preview_monitor_edit.\n\nAuto-migration:\n  Legacy monitors (variable_group != 0 or input_variables lack buckets)\n  auto-migrate to V3 form on edit: every input_variable gets a bucket,\n  and the legacy variable_group field is cleared. The migration is\n  idempotent — re-editing an already-V3 monitor is a no-op on the bucket\n  side. Migration is unconditional: it's correct by construction, so\n  there is no opt-out.\n\n  When the underlying test references multiple variable groups, variables\n  in groups OTHER than the legacy variable_group use their own group's\n  default variant (unless variants overrides). Use the variants array to\n  pin non-default variants for specific groups during the migration edit.\n\nProtected fields: test_id and product_id CANNOT be changed (locked by the API). To change the underlying test, delete the monitor and create a new one.\nA per-monitor edit limit is enforced (10). Check edits_remaining in the response.\nIf this fails with HTTP 400/404, the monitor may have been deleted — verify with get_monitor first.",
       "annotations": {
         "title": "Edit Monitor",
         "readOnlyHint": false,
@@ -3451,7 +3463,7 @@
       "category": "Metrics",
       "categorySlug": "metrics",
       "summary": "Get device resource usage over time, broken down by a configurable aggregation window.",
-      "description": "Get device resource usage over time, broken down by a configurable aggregation window. Returns usage percentage per resource. Use list_resources to find device IDs (SIM: national_msisdn, web-agent: hostname, smartphone: UUID). Response keyed by resource name. Maximum recommended range: 90 days. Pass aggregations (e.g. 'p95,max') to include peak usage data alongside the default aggregation. Use instead of query_metrics for device utilization %; no InfluxQL needed.",
+      "description": "Get device resource usage over time, broken down by a configurable aggregation window. Returns usage percentage per resource. Use list_resources to find device IDs (SIM: national_msisdn, web-agent: hostname, smartphone: UUID). Response keyed by resource name. Maximum recommended range: 90 days. Pass aggregations (comma-separated duration windows, e.g. '1h,24h') to get peak usage per window instead. Use instead of query_metrics for device utilization %; no InfluxQL needed.",
       "annotations": {
         "title": "Get Resource Usage",
         "readOnlyHint": true,
@@ -3462,11 +3474,11 @@
       "inputSchema": {
         "properties": {
           "aggregation": {
-            "description": "Time aggregation bucket (e.g. '1h', '5m')",
+            "description": "Time aggregation bucket — '5m' recommended (the platform samples usage at 5m). Days are not supported: use '24h', never '1d'.",
             "type": "string"
           },
           "aggregations": {
-            "description": "Comma-separated aggregation windows for peak usage (e.g. 'p95,max'). When provided, returns P95 peak usage across these windows instead of the standard time-series.",
+            "description": "Comma-separated duration windows for peak usage (e.g. '1h,24h' — never stat names like 'p95'). When provided, returns the peak usage per window instead of the standard time-series.",
             "type": "string"
           },
           "detail": {
@@ -4060,7 +4072,7 @@
       "category": "Shell",
       "categorySlug": "shell",
       "summary": "List recent shell actions (commands already sent) for a product.",
-      "description": "List recent shell actions (commands already sent) for a product. Returns compact summaries showing ID, type, command summary, status, and duration. Use from_date + ordering to poll for asynchronous results such as incoming SMS or USSD menu responses during a live session. Filter by status to find in-flight commands: status=P (pending), status=O (ongoing). To see which shell action TYPES can be sent, use list_shell_action_types.",
+      "description": "List recent shell actions (commands already sent) for a product. Returns compact summaries showing ID, type, command summary, status, and duration. Results default to the last 24 hours unless from_date is set. Use from_date + ordering to poll for asynchronous results such as incoming SMS or USSD menu responses during a live session. Filter by status to find in-flight commands: status=P (pending), status=O (ongoing). To see which shell action TYPES can be sent, use list_shell_action_types.",
       "annotations": {
         "title": "List Shell Actions",
         "readOnlyHint": true,
@@ -4075,7 +4087,7 @@
             "type": "boolean"
           },
           "from_date": {
-            "description": "Only show shells created after this ISO 8601 timestamp (e.g. 2026-03-15T19:29:17Z). Use to poll for new async events.",
+            "description": "Only show shells created after this ISO 8601 timestamp (e.g. 2026-03-15T19:29:17Z). Defaults to the last 24 hours when omitted. Use to poll for new async events.",
             "type": "string"
           },
           "ordering": {
@@ -4105,6 +4117,10 @@
               "T",
               "M"
             ],
+            "type": "string"
+          },
+          "to_date": {
+            "description": "Only show shells created before this ISO 8601 timestamp. Combine with from_date for a closed window.",
             "type": "string"
           }
         },
@@ -4162,7 +4178,7 @@
       "category": "Agent",
       "categorySlug": "agent",
       "summary": "Get detailed information about a single agent, including slots (cellular/smartphone) or capacity (ethernet).",
-      "description": "Get detailed information about a single agent, including slots (cellular/smartphone) or capacity (ethernet).\nCellular agents show SIM card slots with IMEI and attached SIM status.\nSmartphone agents show connected phones with USB paths and status.\nEthernet agents show capacity (max parallel tests).\n\nUse list_agents to find agent UUIDs first.",
+      "description": "Get detailed information about a single agent, including slots (cellular/smartphone) or capacity (ethernet).\nCellular agents show SIM card slots with IMEI and attached SIM status.\nSmartphone agents show connected phones with USB paths and status.\nEthernet agents show capacity (max parallel tests).\n\nIdentify the agent with either of its identifiers — the hostname list_agents shows, or its UUID.",
       "annotations": {
         "title": "Get Agent",
         "readOnlyHint": true,
@@ -4172,23 +4188,22 @@
       },
       "inputSchema": {
         "properties": {
+          "agent": {
+            "description": "Agent hostname or UUID (from list_agents)",
+            "type": "string"
+          },
           "type": {
-            "description": "Agent type: cellular, ethernet, smartphone",
+            "description": "Agent type. Only needed to narrow the lookup; a hostname resolves its own type.",
             "enum": [
               "cellular",
               "ethernet",
               "smartphone"
             ],
             "type": "string"
-          },
-          "uuid": {
-            "description": "Agent UUID",
-            "type": "string"
           }
         },
         "required": [
-          "uuid",
-          "type"
+          "agent"
         ],
         "type": "object"
       }
@@ -4245,7 +4260,7 @@
       "category": "Agent",
       "categorySlug": "agent",
       "summary": "Reboot an agent or a specific SIM slot (cellular only).",
-      "description": "Reboot an agent or a specific SIM slot (cellular only).\nRequires confirm=true to execute. Without it, returns a preview of what will be rebooted.\n\nUse list_agents to find agent UUIDs. Use get_agent to see slot IDs for slot-level reboot.",
+      "description": "Reboot an agent or a specific SIM slot (cellular only).\nRequires confirm=true to execute. Without it, returns a preview of what will be rebooted.\n\nIdentify the agent with either of its identifiers — the hostname list_agents shows, or its UUID. Use get_agent to see slot IDs for slot-level reboot.",
       "annotations": {
         "title": "Reboot Agent",
         "readOnlyHint": false,
@@ -4255,6 +4270,10 @@
       },
       "inputSchema": {
         "properties": {
+          "agent": {
+            "description": "Agent hostname or UUID (from list_agents)",
+            "type": "string"
+          },
           "confirm": {
             "description": "Must be true to execute. Without confirm=true, returns a preview.",
             "type": "boolean"
@@ -4264,22 +4283,17 @@
             "type": "number"
           },
           "type": {
-            "description": "Agent type: cellular, ethernet, smartphone",
+            "description": "Agent type. Only needed to narrow the lookup; a hostname resolves its own type.",
             "enum": [
               "cellular",
               "ethernet",
               "smartphone"
             ],
             "type": "string"
-          },
-          "uuid": {
-            "description": "Agent UUID",
-            "type": "string"
           }
         },
         "required": [
-          "uuid",
-          "type",
+          "agent",
           "confirm"
         ],
         "type": "object"
@@ -4292,7 +4306,7 @@
       "category": "Agent",
       "categorySlug": "agent",
       "summary": "Enable or disable maintenance mode for an agent.",
-      "description": "Enable or disable maintenance mode for an agent. Works for all agent types.\nRequires confirm=true to execute. Without it, returns a preview of the change.\n\nMaintenance mode prevents the agent from running tests. Use list_agents to find agent UUIDs.",
+      "description": "Enable or disable maintenance mode for an agent. Works for all agent types.\nRequires confirm=true to execute. Without it, returns a preview of the change.\n\nMaintenance mode prevents the agent from running tests. Identify the agent with either of its identifiers — the hostname list_agents shows, or its UUID.",
       "annotations": {
         "title": "Toggle Agent Maintenance",
         "readOnlyHint": false,
@@ -4302,6 +4316,10 @@
       },
       "inputSchema": {
         "properties": {
+          "agent": {
+            "description": "Agent hostname or UUID (from list_agents)",
+            "type": "string"
+          },
           "confirm": {
             "description": "Must be true to execute. Without confirm=true, returns a preview.",
             "type": "boolean"
@@ -4309,14 +4327,10 @@
           "maintenance": {
             "description": "true to enable maintenance, false to disable",
             "type": "boolean"
-          },
-          "uuid": {
-            "description": "Agent UUID",
-            "type": "string"
           }
         },
         "required": [
-          "uuid",
+          "agent",
           "maintenance",
           "confirm"
         ],

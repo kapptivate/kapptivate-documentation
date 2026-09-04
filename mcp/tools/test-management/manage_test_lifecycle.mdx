@@ -16,7 +16,7 @@ Manage a test's lifecycle state: trash, restore, archive, or unarchive.
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `acknowledge` | boolean | No | Must be true for destructive actions (trash, archive) |
+| `acknowledge` | boolean | No | Must be true for destructive actions (trash, archive). Also resets the lifecycle edit budget when the limit is reached |
 | `action` | string (trash \| restore \| archive \| unarchive) | Yes | Lifecycle action: trash, restore, archive, unarchive |
 | `kind` | number | No | 1 = regular test (default), 2 = reusable V2 component |
 | `test_id` | number | Yes | Test id |
