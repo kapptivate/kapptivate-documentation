@@ -18,7 +18,7 @@ Execute a campaign and wait for results — blocks until completion and returns 
 | --- | --- | --- | --- |
 | `campaign_json` | string | Yes | Campaign JSON template (from build_campaign) |
 | `ignore_errors` | boolean | No | Ignore failures across all action types (options.ignore_failed = &lt;all action codes&gt;). Per-test statuses may be rewritten to success. |
-| `max_poll_duration` | string | No | Maximum time to wait for results (default: 10m). Format: Go duration string (e.g. 5m, 15m) |
+| `max_poll_duration` | string | No | Maximum time to wait for results (default: 10m). Format: duration string (e.g. 5m, 15m) |
 | `overrides` | string | No | JSON object mapping test IDs to their variable values and owner assignments. Format: \{"&lt;test_id&gt;": \{"input_variables": \{...\}, "direct_owners": \{...\}\}\}. input_variables values are flat strings (e.g. "42"); direct_owners maps a device identifier to a value (e.g., \{"sim_owner": "SIM-001"\}). To target a specific variant, pin it at build time via build_campaign variants=[…] — the \{value, bucket\} object form is NOT accepted here. |
 | `parallel` | boolean | No | Run campaign tests in parallel (options.parallel_test_execution=-1). Superadmin-only; the platform rejects test lists that use SIM or SMARTPHONE actions, or sleep on unlocked resources. |
 

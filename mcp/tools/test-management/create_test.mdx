@@ -22,6 +22,8 @@ Create a new test from a JSON definition.
 | `kind` | number | No | Test kind: 1=test (default), 2=reusable V2 component (V2 action types only: ETH_WEB_SCRIPT_V2, SMARTPHONE_APP_SCRIPT_V2) |
 | `name` | string | Yes | Test name |
 | `product` | string | Yes | Product slug (resolved to ID + root collection UID automatically) |
+| `skip_validation` | boolean | No | Bypass the client-side validator (the platform still validates). Use for action types the registry doesn't recognise yet. V3 bucket resolution still runs — the API requires buckets on create. Also disables the kind=2 reusable V2-format check. |
+| `tags` | array | No | Optional tags to set on the test at creation, e.g. ["smoke","checkout"]. Tag at creation — otherwise the test lands untagged and needs a follow-up edit_test. |
 | `variables` | string | Yes | JSON variables object with input_variables, output_variables, owners |
 | `variants` | array | No | Variant pin specifiers (V3 bucket resolution). Each item is either '5' (numeric variant ID) or 'API:Staging' (group:variant by name, case-sensitive). Repeat for multi-group: ["API:Staging", "Database:Replica", "Frontend:Canary"]. Groups not pinned use their default variant. |
 
@@ -47,6 +49,8 @@ Runs structural validation before submitting. Product slug is resolved to ID + r
 V3 buckets: every non-global input_variable gets an auto-resolved bucket pointing at (variable_group, variant). Pass variants=["API:Staging", "Database:Replica"] (repeatable forms: numeric variant ID or 'group:variant' name) to pin specific variants per group; groups not pinned use their default variant. Globals always emit {type:"global"}.
 
 Kind validation: declared input_variable.kind must match the platform's variable type (1/3 → "regular", 2 → "secret"). Mismatches are hard errors by default. Pass auto_correct_kinds=true to rewrite mismatches in-place.
+
+skip_validation=true bypasses the client-side validator. Use only when the test has an action type this MCP server's registry doesn't know yet (future types) — the platform still validates. V3 bucket resolution still runs even when skipped (the API requires buckets on create, unlike edit there is no existing test to inherit them from).
 
 PREREQUISITE: call platform_guide topic=test_creation for the full workflow, owner mapping, and variable substitution rules.
 Workflow: list_action_types → get_test_template → list_resources → customize → validate_test → create_test.

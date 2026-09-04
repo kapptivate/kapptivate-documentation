@@ -20,6 +20,7 @@ Shows diff preview.
 | `auto_correct_kinds` | boolean | No | Rewrite declared input_variable kinds to match the platform's variable types. Default false: kind mismatches are hard errors. |
 | `description` | string | No | New test description (only if explicitly changing it) |
 | `name` | string | No | New test name (only if explicitly changing it) |
+| `skip_validation` | boolean | No | Bypass the client-side validator (the platform still validates). Use for action types the CLI doesn't recognise or top-level metadata edits. Match this to the edit_test call you are previewing so the preview and apply run the same path. |
 | `test_id` | number | Yes | ID of the test to preview changes for |
 | `variables` | string | No | JSON variables object (replaces current variables) |
 | `variants` | array | No | Variant pin specifiers for V3 bucket resolution. Each item is '5' (numeric ID) or 'API:Staging' (group:variant by name). Edit mode: groups not pinned retain their existing buckets. |

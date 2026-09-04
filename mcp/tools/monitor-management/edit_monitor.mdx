@@ -56,7 +56,7 @@ Auto-migration:
   pin non-default variants for specific groups during the migration edit.
 
 Protected fields: test_id and product_id CANNOT be changed (locked by the API). To change the underlying test, delete the monitor and create a new one.
-A per-monitor edit limit is enforced (10 per session). Check edits_remaining in the response.
+A per-monitor edit limit is enforced (10). Check edits_remaining in the response.
 If this fails with HTTP 400/404, the monitor may have been deleted — verify with get_monitor first.
 ```
 

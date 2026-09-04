@@ -47,7 +47,7 @@ DESTRUCTIVE — creates a new version automatically.
 PREREQUISITE: call platform_guide topic=test_editing for the guardrailed workflow and protected fields.
 ALWAYS preview first with preview_test_edit to check impact.
 Protected fields: product and collection_uid are NEVER changed. Name and description only change when explicitly provided.
-A per-test edit limit is enforced (5 per session). Check edits_remaining in the response.
+A per-test edit limit is enforced (5). Check edits_remaining in the response.
 
 Top-level metadata that's now always preserved on PUT and editable via this tool: archived, is_favorite, status. Pass archived=true to archive the test without touching actions; use manage_test_lifecycle action=archive (or action=unarchive) for the common case.
 
