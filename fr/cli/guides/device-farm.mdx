@@ -4,31 +4,49 @@ description: Tunnelisez un smartphone du device farm vers votre machine locale p
 sidebarTitle: Device farm (ADB)
 ---
 
-Les développeurs peuvent connecter un téléphone du device farm à leur machine locale via un tunnel sécurisé, pour que `adb`, Android Studio et le débogage JDWP fonctionnent avec un appareil distant comme s'il était branché physiquement. C'est pratique pour créer ou déboguer des tests smartphone.
+Connectez un téléphone du device farm à votre machine locale via un tunnel sécurisé : `adb`, Android Studio et le débogage JDWP fonctionnent avec l'appareil distant comme s'il était branché physiquement. C'est pratique pour créer ou déboguer des tests smartphone.
+
+Chaque agent embarque un bridge ADB qui expose ses téléphones pour le débogage à distance. Le bridge est désactivé par défaut : vous l'activez par agent, vous vous connectez, puis vous le désactivez quand vous avez terminé.
 
 ## Connecter un téléphone
 
 <Steps>
   <Step title="Trouver l'appareil">
-    `ktm resources list --product acme~web --type smartphone -o table` liste les smartphones accessibles. Voir [Laboratoire d'appareils](/fr/equipment/devices-lab).
+    `ktm adb status` affiche chaque téléphone avec son agent, l'état du bridge et qui le détient actuellement. Pour parcourir par produit, `ktm resources list --product acme~web --type smartphone -o table` liste les smartphones accessibles. Voir [Laboratoire d'appareils](/fr/equipment/devices-lab).
   </Step>
   <Step title="Ouvrir le tunnel">
-    `ktm adb connect <phone-serial>` démarre un tunnel ADB local vers ce téléphone.
+    `ktm adb connect <phone-serial>` tunnelise ce téléphone vers votre serveur ADB local. Si le bridge de l'agent est désactivé, la commande propose de l'activer pour vous. Sur un terminal interactif, `ktm adb connect` sans argument vous laisse choisir un téléphone dans une liste.
   </Step>
   <Step title="L'utiliser localement">
-    L'appareil s'enregistre automatiquement auprès de votre serveur ADB local, donc `adb devices` l'affiche et Android Studio le détecte.
+    L'appareil s'enregistre automatiquement auprès de votre serveur ADB local, donc `adb devices` l'affiche et Android Studio le détecte. Port forwarding, reverse forwarding et JDWP fonctionnent : votre vrai serveur ADB local gère le protocole.
+  </Step>
+  <Step title="Le libérer">
+    Déconnectez-vous avec Ctrl+C et le téléphone est libéré immédiatement pour la personne suivante. Pour couper complètement le débogage à distance d'un robot, `ktm adb disable --agent <hostname> --confirm` désactive son bridge et libère ses téléphones.
   </Step>
 </Steps>
 
 ```bash
-# Connect (the device registers with your local ADB server on port 6037)
+# Choisir un téléphone interactivement
+ktm adb connect
+
+# Connecter un téléphone précis (enregistré auprès de votre serveur ADB local sur le port 6037)
 ktm adb connect RF8NB07VDGA
 
-# Use a custom local port
+# Utiliser un port local personnalisé
 ktm adb connect RF8NB07VDGA --port 7037
+
+# Gérer le bridge vous-même (instantané, sans redémarrage de l'agent)
+ktm adb enable --agent robot-lab-3
+ktm adb disable --agent robot-lab-3 --confirm
 ```
 
-Un relais TCP léger fait le pont entre votre serveur ADB local et le téléphone distant via un tunnel WebSocket sécurisé, avec support complet du port forwarding, du reverse forwarding et du débogage JDWP. Votre vrai serveur ADB local gère toutes les questions de protocole.
+Le tunnel est une connexion TLS sécurisée sur le port 443. Si votre machine peut joindre la plateforme, elle peut déboguer un téléphone : ni VPN, ni changement de pare-feu.
+
+## Accès exclusif
+
+Vous détenez le téléphone de manière exclusive tant que vous êtes connecté, et il est libéré dès que vous vous déconnectez. Si votre session se termine brutalement (coupure réseau, terminal tué), le téléphone est libéré automatiquement après quelques minutes.
+
+Avant de prendre un appareil, consultez `ktm adb status` pour voir qui détient quoi. L'activation du bridge sur un agent revient à la configuration par défaut de cet agent à son prochain redémarrage.
 
 ## Et ensuite ?
 
