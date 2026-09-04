@@ -20,6 +20,7 @@ Affiche un aperçu du diff.
 | `auto_correct_kinds` | boolean | Non | Réécrit les kinds d'input_variable déclarés pour correspondre aux types de variables de la plateforme. Défaut false : les incohérences de kind sont des erreurs bloquantes. |
 | `description` | string | Non | Nouvelle description du test (uniquement si modification explicite) |
 | `name` | string | Non | Nouveau nom du test (uniquement si modification explicite) |
+| `skip_validation` | boolean | Non | Contourne le validateur côté client (la plateforme valide toujours). À utiliser pour les types d'action que le CLI ne reconnaît pas ou les modifications de métadonnées top-level. Alignez cette valeur sur l'appel edit_test prévisualisé pour que la prévisualisation et l'application suivent le même chemin. |
 | `test_id` | number | Oui | Identifiant du test pour lequel prévisualiser les modifications |
 | `variables` | string | Non | Objet JSON variables (remplace les variables actuelles) |
 | `variants` | array | Non | Spécificateurs de variant pin pour la résolution de bucket V3. Chaque élément est '5' (ID numérique) ou 'API:Staging' (group:variant par nom). Mode édition : les groupes non épinglés conservent leurs buckets existants. |

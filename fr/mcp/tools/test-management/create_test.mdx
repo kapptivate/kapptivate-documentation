@@ -22,6 +22,8 @@ Crée un nouveau test à partir d'une définition JSON.
 | `kind` | number | Non | Kind du test : 1=test (défaut), 2=composant reusable V2 (types d'action V2 uniquement : ETH_WEB_SCRIPT_V2, SMARTPHONE_APP_SCRIPT_V2) |
 | `name` | string | Oui | Nom du test |
 | `product` | string | Oui | Slug du produit (résolu automatiquement en ID + root collection UID) |
+| `skip_validation` | boolean | Non | Contourne le validateur côté client (la plateforme valide toujours). À utiliser pour les types d'action que le registre ne reconnaît pas encore. La résolution de bucket V3 s'exécute quand même : l'API exige des buckets à la création. Désactive aussi le contrôle de format V2 des reusables kind=2. |
+| `tags` | array | Non | Tags optionnels à poser sur le test à la création, par ex. ["smoke","checkout"]. Taguez à la création : sinon le test arrive sans tags et nécessite un edit_test de rattrapage. |
 | `variables` | string | Oui | Objet JSON variables avec input_variables, output_variables, owners |
 | `variants` | array | Non | Spécificateurs de variant pin (résolution de bucket V3). Chaque élément est soit '5' (ID numérique de variant) soit 'API:Staging' (group:variant par nom, sensible à la casse). Répétez pour multi-group : ["API:Staging", "Database:Replica", "Frontend:Canary"]. Les groupes non épinglés utilisent leur variant par défaut. |
 

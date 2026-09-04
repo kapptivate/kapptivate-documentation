@@ -11,7 +11,7 @@ Shell : sessions interactives en temps réel sur les cartes SIM et les web agent
 ## Utilisation
 
 ```bash
-ktm shell [command]
+ktm shell [flags]
 ```
 
 ## Sous-commandes
@@ -24,7 +24,7 @@ ktm shell [command]
     Obtenir le résultat complet d'une commande shell
   </Card>
   <Card title="list" icon="angle-right" href="/fr/cli/commands/shell/list">
-    Lister les actions shell récentes
+    Lister les actions shell récentes (dernières 24h par défaut)
   </Card>
   <Card title="progress" icon="angle-right" href="/fr/cli/commands/shell/progress">
     Lister les commandes shell en attente et en cours
@@ -46,7 +46,7 @@ Types d'appareils pris en charge :
   SIM (owner_kind=S) :      USSD, SMS, appels, opérations de données via réseau cellulaire
   Ethernet (owner_kind=E) : HTTP API, ping, DNS, transferts via web agents
 
-Les smartphones ne sont pas pris en charge (architecture WebSocket uniquement).
+Les smartphones ne sont pas pris en charge : pilotez-les plutôt via des tests ou l'automatisation d'appareils en direct.
 
 Les sessions USSD sont avec état : composer un shortcode ouvre une session, et envoyer des numéros
 d'option de menu (1, 2, 3) permet de naviguer plus profondément dans l'arborescence du menu. Les sessions expirent après

@@ -17,33 +17,54 @@ ktm tests list [flags]
 ## Exemples
 
 ```bash
-# Lister les tests pour un produit
-ktm tests list --product acme~web
+# Lister tous les tests d'un produit
+ktm tests list --operator my-operator --product my-operator~my-product
 
-# Lister les tests archivés
-ktm tests list --product acme~web --archived true
+# Rechercher par sous-chaîne du nom
+ktm tests list --operator my-operator --name login
 
-# Lister les tests avec un nom contenant "login"
-ktm tests list --product acme~web --name login
+# Inclure les tests archivés
+ktm tests list --operator my-operator --archived true
 
-# Format tableau
-ktm tests list --product acme~web -o table
+# Filtrer par tags
+ktm tests list --operator my-operator --tags smoke,regression
+
+# Paginer les résultats
+ktm tests list --operator my-operator --page 2 --page-size 50
 ```
 
 ## Flags
 
 | Flag | Type | Défaut | Description |
 | --- | --- | --- | --- |
-| `--archived` | string | — | Filtrer par statut archivé : true ou false |
-| `--name` | string | — | Filtrer par nom de test (correspondance partielle) |
-| `--operator` | string | — | Slug de l'operator pour limiter les résultats |
-| `--page` | int | — | Numéro de page |
-| `--page-size` | int | — | Éléments par page |
-| `--product` | string | — | Slug du produit pour limiter les résultats |
+| `--archived` | string | — | Inclure les tests archivés : true, false (défaut : false = non archivés uniquement) |
+| `--fields` | string | — | Restreindre la réponse JSON à ces champs (liste blanche séparée par des virgules) |
+| `--name` | string | — | Filtrer par nom de test (correspondance partielle, insensible à la casse) |
+| `--operator` | string | — | Slug de l'operator (depuis 'operators list') pour limiter les résultats |
+| `--ordering` | string | — | Trier par champ : name, created, modified (préfixez avec - pour l'ordre décroissant) |
+| `--page` | string | — | Numéro de page à récupérer (défaut : 1) |
+| `--page-size` | string | — | Nombre de résultats par page (défaut : 20 ; passez une valeur plus élevée pour en récupérer davantage) |
+| `--product` | string | — | Slug du produit (depuis 'products list', format : operator~product) pour limiter les résultats |
+| `--tags` | string[] | — | Liste de tags séparés par des virgules pour filtrer (ex. --tags smoke,regression) |
+
+## Détails
+
+Liste les scénarios de test définis sur la plateforme.
+
+Les tests appartiennent à un produit (qui appartient lui-même à un operator). Utilisez --operator et
+--product pour affiner les résultats. Les tests non archivés sont retournés par défaut.
+
+L'"id" du test peut être utilisé dans les fichiers de configuration CI pour déclencher une exécution via "ci run".
+
+Champs de sortie JSON : id, name, product, owner, tags, archived, is_valid, status, kind, created, modified
+Colonnes du tableau :   ID, NAME, PRODUCT, STATUS, KIND, ARCHIVED
 
 ## Voir aussi
 
 - [`ktm tests`](/fr/cli/commands/tests)
+- [`ktm ci run`](/fr/cli/commands/ci/run)
+- [`ktm operators list`](/fr/cli/commands/operators/list)
+- [`ktm products list`](/fr/cli/commands/products/list)
 
 <Note>
   Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Consultez la [vue d'ensemble de la référence des commandes](/fr/cli/commands/overview).

@@ -14,6 +14,16 @@ Effacer le token OAuth stocké (et le révoquer côté serveur)
 ktm logout [flags]
 ```
 
+## Exemples
+
+```bash
+# Effacer le token stocké et le révoquer côté serveur
+ktm logout
+
+# Effacer uniquement le stockage local (ignorer l'appel de révocation)
+ktm logout --keep-remote
+```
+
 ## Flags
 
 | Flag | Type | Défaut | Description |

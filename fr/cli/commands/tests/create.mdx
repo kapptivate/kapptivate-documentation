@@ -34,6 +34,9 @@ ktm tests create --from-file test.json --product acme~web \
 
 # Auto-corriger les kinds d'input_variable déclarés lorsqu'ils ne correspondent pas aux types de variables de la plateforme
 ktm tests create --from-file test.json --product acme~web --auto-correct-kinds
+
+# Contourner le validateur côté client lorsqu'il est en retard sur le moteur (la plateforme valide toujours)
+ktm tests create --from-file test.json --product acme~web --skip-validation
 ```
 
 ## Flags
@@ -45,6 +48,7 @@ ktm tests create --from-file test.json --product acme~web --auto-correct-kinds
 | `--kind` | int | `1` | Kind du test : 1=test, 2=composant reusable |
 | `--name` | string | — | Remplacer le nom du test depuis le fichier JSON |
 | `--product` | string | — | Slug du produit (requis, format : operator~product) |
+| `--skip-validation` | boolean | — | Contourne le validateur côté client (la plateforme valide toujours). À utiliser lorsque le validateur du CLI est en retard sur le moteur (types de step/action futurs). La résolution de bucket V3 s'exécute quand même : l'API exige des buckets à la création. |
 | `--variant` | string[] | — | Fixer un variant pour un groupe de variables. Répétable. Formes : '5' (identifiant numérique du variant) ou 'API:Staging' (group:variant par nom). Les groupes non fixés utilisent leur variant par défaut. |
 
 ## Détails
@@ -144,7 +148,7 @@ Exemple de structure JSON :
     ]
   \}
 
-## Associés
+## Voir aussi
 
 - [`ktm tests`](/fr/cli/commands/tests)
 - [`ktm tests template`](/fr/cli/commands/tests/template)

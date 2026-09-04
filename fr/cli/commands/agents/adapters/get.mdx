@@ -1,0 +1,64 @@
+---
+title: "ktm agents adapters get"
+description: "Afficher les paramètres d'un adaptateur, leurs types et ceux qui sont modifiables"
+sidebarTitle: "get"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Afficher les paramètres d'un adaptateur, leurs types et ceux qui sont modifiables
+
+## Utilisation
+
+```bash
+ktm agents adapters get <adapter> [flags]
+```
+
+## Exemples
+
+```bash
+ktm agents adapters get adb_bridge --agent phone-hub-01
+ktm agents adapters get adb_bridge --agent phone-hub-01 --resource EXAMPLE1234
+ktm agents adapters get adb_bridge --agent phone-hub-01 --output json
+```
+
+## Arguments
+
+| Argument | Requis |
+| --- | --- |
+| `adapter` | Oui |
+
+## Flags
+
+| Flag | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `--resource` | string | — | Numéro de série du téléphone : n'afficher que les valeurs en vigueur pour ce téléphone |
+
+## Détails
+
+Affiche les paramètres d'un adaptateur : la clé à passer à 'set', son type, la
+valeur en vigueur, les valeurs acceptées pour un choix, et s'il est modifiable
+ou non.
+
+Avec --resource &lt;serial&gt;, affiche les valeurs en vigueur pour ce téléphone :
+un téléphone a soit sa propre surcharge, soit suit la valeur au niveau de
+l'agent.
+
+## Voir aussi
+
+- [`ktm agents adapters`](/fr/cli/commands/agents/adapters)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

@@ -1,0 +1,79 @@
+---
+title: "ktm agents adapters set"
+description: "Modifier les paramètres d'un adaptateur sur un agent, ou pour un seul téléphone"
+sidebarTitle: "set"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Modifier les paramètres d'un adaptateur sur un agent, ou pour un seul téléphone
+
+## Utilisation
+
+```bash
+ktm agents adapters set <adapter> KEY=VALUE... [flags]
+```
+
+## Exemples
+
+```bash
+ktm agents adapters set adb_bridge video_quality=low --agent phone-hub-01
+ktm agents adapters set adb_bridge video_quality=standard --agent phone-hub-01
+ktm agents adapters set adb_bridge video_quality=native --agent phone-hub-01 --resource EXAMPLE1234
+ktm agents adapters set adb_bridge video_quality= --agent phone-hub-01 --resource EXAMPLE1234
+# --empty KEY définit un paramètre texte libre à "" (KEY= efface au lieu de définir) ; voir 'get' pour les clés existantes
+```
+
+## Arguments
+
+| Argument | Requis |
+| --- | --- |
+| `adapter` | Oui |
+
+## Flags
+
+| Flag | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `--empty` | string[] | — | Définir un paramètre à la chaîne vide (répétable) ; KEY= efface au lieu de définir |
+| `--resource` | string | — | Numéro de série du téléphone : appliquer à ce téléphone uniquement (KEY= efface sa surcharge) |
+
+## Détails
+
+Modifie un ou plusieurs paramètres d'un adaptateur sans redémarrer l'agent.
+Exécutez d'abord 'ktm agents adapters get &lt;adapter&gt;' pour voir quelles clés
+existent et lesquelles sont modifiables.
+
+Les valeurs sont typées : l'agent déclare le type de chaque paramètre et cette
+commande envoie la valeur sous cette forme (un nombre part donc comme un
+nombre). Saisissez une valeur telle que 'get' l'affiche (video_quality=low,
+idle_timeout=1800) et la conversion est automatique.
+
+Avec --resource &lt;serial&gt;, le changement ne s'applique qu'à ce téléphone ; une
+valeur vide (KEY=) supprime la surcharge et le téléphone suit de nouveau la
+valeur au niveau de l'agent. Pour définir un paramètre À la chaîne vide plutôt
+que l'effacer, utilisez --empty KEY.
+
+Les clés inconnues et les valeurs rejetées sont refusées d'emblée : un
+changement qui rapporte un succès a bien été appliqué. Les changements sont
+éphémères : après un redémarrage de l'agent, c'est de nouveau la configuration
+propre de l'agent qui décide.
+
+## Voir aussi
+
+- [`ktm agents adapters`](/fr/cli/commands/agents/adapters)
+- [`ktm agents adapters get`](/fr/cli/commands/agents/adapters/get)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

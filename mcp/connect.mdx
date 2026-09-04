@@ -4,7 +4,7 @@ description: Set up Claude, Cursor, Claude Code, or GitHub Copilot against the K
 sidebarTitle: AI clients
 ---
 
-Point any MCP-compatible client at `https://mcp.kapptivate.com/mcp` and authenticate with the `X-Kapptivate-API-Key` header. This page covers the common developer clients (Claude, Cursor, Claude Code, and GitHub Copilot). For Microsoft 365 Copilot Studio and Google Gemini, see their dedicated pages in this section.
+Point any MCP-compatible client at `https://mcp.kapptivate.com/mcp` and authenticate either with a browser sign-in (OAuth) or with the `X-Kapptivate-API-Key` header. This page covers the common developer clients (Claude, Cursor, Claude Code, and GitHub Copilot). For Microsoft 365 Copilot Studio and Google Gemini, see their dedicated pages in this section.
 
 ## Get your API key
 
@@ -20,6 +20,10 @@ Point any MCP-compatible client at `https://mcp.kapptivate.com/mcp` and authenti
 <Warning>
   Treat the key like a password. Prefer an environment variable over pasting it into a config file you might commit.
 </Warning>
+
+<Note>
+  Prefer signing in with your browser? Clients that implement MCP authorization (Claude custom connectors, for example) can skip the API key entirely: add the server URL without any header and the client walks you through a browser sign-in (OAuth). The key-based setup below remains the simplest path for clients configured by file.
+</Note>
 
 ## Configure your client
 
@@ -114,7 +118,7 @@ Open Copilot Chat in agent mode, then start the server from **MCP: List Servers*
 Ask your assistant for something read-only, for example: "List the operators I can access." If it returns results, you are connected.
 
 <Tip>
-  If a call fails with an authentication error, re-check the header value. The server accepts `X-Kapptivate-API-Key` only; it does not use `Authorization: Bearer`.
+  If a call fails with an authentication error, re-check the header value. The server accepts your API key in the `X-Kapptivate-API-Key` header, or an OAuth session via `Authorization: Bearer` (obtained through the browser sign-in).
 </Tip>
 
 ## What's Next?

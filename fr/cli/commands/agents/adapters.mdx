@@ -1,0 +1,77 @@
+---
+title: "ktm agents adapters"
+description: "Lister, activer/désactiver et configurer les adaptateurs contrôlables à chaud d'un agent"
+sidebarTitle: "adapters"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Lister, activer/désactiver et configurer les adaptateurs contrôlables à chaud d'un agent
+
+## Utilisation
+
+```bash
+ktm agents adapters [flags]
+```
+
+## Sous-commandes
+
+<Columns cols={2}>
+  <Card title="disable" icon="angle-right" href="/fr/cli/commands/agents/adapters/disable">
+    Arrêter un adaptateur contrôlable sur un agent (met fin à tout travail en cours)
+  </Card>
+  <Card title="enable" icon="angle-right" href="/fr/cli/commands/agents/adapters/enable">
+    Démarrer un adaptateur contrôlable sur un agent (sans redémarrage de l'agent)
+  </Card>
+  <Card title="get" icon="angle-right" href="/fr/cli/commands/agents/adapters/get">
+    Afficher les paramètres d'un adaptateur, leurs types et ceux qui sont modifiables
+  </Card>
+  <Card title="list" icon="angle-right" href="/fr/cli/commands/agents/adapters/list">
+    Lister les adaptateurs contrôlables d'un agent et leur état
+  </Card>
+  <Card title="set" icon="angle-right" href="/fr/cli/commands/agents/adapters/set">
+    Modifier les paramètres d'un adaptateur sur un agent, ou pour un seul téléphone
+  </Card>
+</Columns>
+
+## Détails
+
+Contrôle à chaud des adaptateurs d'un agent smartphone.
+
+Certaines fonctionnalités d'un agent peuvent être pilotées pendant qu'il tourne :
+démarrées, arrêtées, et leurs paramètres modifiés, sans redémarrage. Le bridge
+ADB (nom d'adaptateur : adb_bridge) est la première. Les paramètres s'appliquent
+soit à l'agent entier, soit, avec --resource, à un seul téléphone.
+
+Utilisez 'get' pour découvrir ce qu'un adaptateur expose : le type de chaque
+paramètre, sa valeur actuelle, les valeurs acceptées et s'il est modifiable ou
+non (certains ne sont affichés qu'à des fins de diagnostic).
+
+Les changements à chaud sont éphémères : après un redémarrage de l'agent, c'est
+de nouveau la configuration propre de l'agent qui décide.
+
+--agent accepte l'un ou l'autre des identifiants de l'agent : son nom d'hôte ou
+son UUID (les colonnes HOSTNAME et UUID de 'ktm agents list', ou la colonne
+AGENT de 'ktm adb status'). La valeur de --resource est un numéro de série de
+téléphone, le même identifiant que prend 'ktm adb connect'. Pour le bridge ADB
+en particulier, 'ktm adb enable|disable' sont des raccourcis équivalents.
+
+## Voir aussi
+
+- [`ktm agents`](/fr/cli/commands/agents)
+- [`ktm adb`](/fr/cli/commands/adb)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

@@ -1,0 +1,62 @@
+---
+title: "ktm agents adapters disable"
+description: "Arrêter un adaptateur contrôlable sur un agent (met fin à tout travail en cours)"
+sidebarTitle: "disable"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Arrêter un adaptateur contrôlable sur un agent (met fin à tout travail en cours)
+
+## Utilisation
+
+```bash
+ktm agents adapters disable <adapter> [flags]
+```
+
+## Exemples
+
+```bash
+ktm agents adapters disable adb_bridge --agent phone-hub-01
+ktm agents adapters disable adb_bridge --agent phone-hub-01 --confirm
+```
+
+## Arguments
+
+| Argument | Requis |
+| --- | --- |
+| `adapter` | Oui |
+
+## Flags
+
+| Flag | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `--confirm` | boolean | — | Exécuter la désactivation (sans ce flag, affiche un aperçu) |
+
+## Détails
+
+Arrête un adaptateur sur un agent, sans redémarrer l'agent. Quiconque utilise
+cet adaptateur est interrompu. Sans --confirm, la commande affiche un aperçu du
+changement et n'arrête rien.
+
+Le changement est éphémère : après un redémarrage de l'agent, c'est de nouveau
+la configuration propre de l'agent qui décide.
+
+## Voir aussi
+
+- [`ktm agents adapters`](/fr/cli/commands/agents/adapters)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

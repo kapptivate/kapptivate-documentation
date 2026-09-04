@@ -1,0 +1,52 @@
+---
+title: "ktm agents adapters list"
+description: "Lister les adaptateurs contrôlables d'un agent et leur état"
+sidebarTitle: "list"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Lister les adaptateurs contrôlables d'un agent et leur état
+
+## Utilisation
+
+```bash
+ktm agents adapters list [flags]
+```
+
+## Exemples
+
+```bash
+ktm agents adapters list --agent phone-hub-01
+ktm agents adapters list --agent phone-hub-01 --output json
+```
+
+## Détails
+
+Affiche chaque fonctionnalité de cet agent pilotable pendant qu'il tourne : si
+elle est en cours d'exécution, si elle démarre avec l'agent (BOOT), combien de
+sessions actives elle sert, si elle accepte des paramètres par téléphone, et les
+paramètres en vigueur au niveau de l'agent.
+
+Utilisez 'ktm agents adapters get &lt;adapter&gt;' pour voir ce que l'on peut
+demander à un adaptateur listé.
+
+## Voir aussi
+
+- [`ktm agents adapters`](/fr/cli/commands/agents/adapters)
+- [`ktm agents adapters get`](/fr/cli/commands/agents/adapters/get)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

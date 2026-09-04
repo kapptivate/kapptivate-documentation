@@ -17,16 +17,25 @@ ktm agents get [flags]
 ## Exemples
 
 ```bash
-ktm agents get --uuid abc-123 --type cellular
-ktm agents get --uuid def-456 --type ethernet
+ktm agents get --agent phone-hub-01
+ktm agents get --agent 7f3c9b21-4d6e-4a51-9ab2-1c8e5f0d3a77 --type cellular
 ```
 
 ## Flags
 
 | Flag | Type | Défaut | Description |
 | --- | --- | --- | --- |
-| `--type` | string | — | Type d'agent : cellular, ethernet, smartphone (requis) |
-| `--uuid` | string | — | UUID de l'agent (requis) |
+| `--agent` | string | — | Nom d'hôte ou UUID de l'agent (requis) |
+| `--type` | string | — | Type d'agent : cellular, ethernet, smartphone (déduit d'un nom d'hôte) |
+
+## Détails
+
+Affiche la santé, la capacité et les slots d'un agent.
+
+--agent accepte l'un ou l'autre des identifiants : le nom d'hôte de l'agent ou
+son UUID (les colonnes HOSTNAME et UUID de 'ktm agents list'). --type ne sert
+qu'à lever l'ambiguïté d'un UUID : avec un nom d'hôte, le type de l'agent est
+retrouvé automatiquement.
 
 ## Voir aussi
 

@@ -4,7 +4,7 @@ description: Configurez Claude, Cursor, Claude Code ou GitHub Copilot avec le se
 sidebarTitle: Clients IA
 ---
 
-Configurez n'importe quel client compatible MCP sur `https://mcp.kapptivate.com/mcp` et authentifiez-vous avec l'en-tête `X-Kapptivate-API-Key`. Cette page couvre les clients développeur courants (Claude, Cursor, Claude Code et GitHub Copilot). Pour Microsoft 365 Copilot Studio et Google Gemini, consultez leurs pages dédiées dans cette section.
+Configurez n'importe quel client compatible MCP sur `https://mcp.kapptivate.com/mcp` et authentifiez-vous soit via une connexion navigateur (OAuth), soit avec l'en-tête `X-Kapptivate-API-Key`. Cette page couvre les clients développeur courants (Claude, Cursor, Claude Code et GitHub Copilot). Pour Microsoft 365 Copilot Studio et Google Gemini, consultez leurs pages dédiées dans cette section.
 
 ## Obtenir votre clé API
 
@@ -20,6 +20,10 @@ Configurez n'importe quel client compatible MCP sur `https://mcp.kapptivate.com/
 <Warning>
   Traitez la clé comme un mot de passe. Préférez une variable d'environnement plutôt que de la coller dans un fichier de configuration que vous pourriez commiter.
 </Warning>
+
+<Note>
+  Vous préférez une connexion via le navigateur ? Les clients qui implémentent l'autorisation MCP (les connecteurs personnalisés Claude, par exemple) peuvent se passer complètement de clé API : ajoutez l'URL du serveur sans aucun en-tête et le client vous guide dans une connexion navigateur (OAuth). La configuration par clé reste le chemin le plus simple pour les clients configurés par fichier.
+</Note>
 
 ## Configurer votre client
 
@@ -114,7 +118,7 @@ Ouvrez Copilot Chat en mode agent, puis démarrez le serveur depuis **MCP: List 
 Demandez à votre assistant quelque chose en lecture seule, par exemple : "Liste les operators auxquels j'ai accès." Si des résultats apparaissent, vous êtes connecté.
 
 <Tip>
-  Si un appel échoue avec une erreur d'authentification, vérifiez la valeur de l'en-tête. Le serveur accepte uniquement `X-Kapptivate-API-Key` ; il n'utilise pas `Authorization: Bearer`.
+  Si un appel échoue avec une erreur d'authentification, vérifiez la valeur de l'en-tête. Le serveur accepte votre clé API dans l'en-tête `X-Kapptivate-API-Key`, ou une session OAuth via `Authorization: Bearer` (obtenue par la connexion navigateur).
 </Tip>
 
 ## Et ensuite ?

@@ -1,22 +1,25 @@
 ---
 title: "ktm agents"
-description: "Agents — santé de l'infrastructure, capacité et gestion"
+description: "Agents : santé de l'infrastructure, capacité et contrôle à chaud des fonctionnalités"
 sidebarTitle: "agents"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Agents — santé de l'infrastructure, capacité et gestion
+Agents : santé de l'infrastructure, capacité et contrôle à chaud des fonctionnalités
 
 ## Utilisation
 
 ```bash
-ktm agents [command]
+ktm agents [flags]
 ```
 
 ## Sous-commandes
 
 <Columns cols={2}>
+  <Card title="adapters" icon="angle-right" href="/fr/cli/commands/agents/adapters">
+    Lister, activer/désactiver et configurer les adaptateurs contrôlables à chaud d'un agent
+  </Card>
   <Card title="get" icon="angle-right" href="/fr/cli/commands/agents/get">
     Obtenir les informations détaillées d'un agent avec ses slots
   </Card>
@@ -40,11 +43,41 @@ Trois types d'agents :
   ethernet    Agents web autonomes (pas de slots, capacité = max de tests parallèles)
   smartphone  Hubs téléphoniques avec smartphones connectés
 
+Chaque commande ci-dessous identifie un agent avec --agent, qui accepte soit le
+nom d'hôte de l'agent, soit son UUID (les colonnes HOSTNAME et UUID de
+'agents list').
+
+Tâches courantes :
+  ktm agents list --operator &lt;slug&gt; --type smartphone      → santé du parc
+  ktm agents get --agent &lt;hostname|uuid&gt;                   → un agent en détail, avec ses slots
+  ktm agents adapters list --agent &lt;hostname|uuid&gt;         → ses fonctionnalités contrôlables à chaud
+  ktm agents adapters get &lt;name&gt; --agent &lt;hostname|uuid&gt;   → ce que cette fonctionnalité expose : paramètres, types, ce qui est modifiable
+  ktm agents adapters set &lt;name&gt; KEY=VALUE --agent &lt;hostname|uuid&gt; [--resource &lt;serial&gt;]
+                                                           → changer un paramètre, pour l'agent ou un seul téléphone
+  ktm agents adapters enable|disable &lt;name&gt; --agent &lt;hostname|uuid&gt;
+                                                           → démarrer/arrêter une fonctionnalité, sans redémarrage de l'agent
+  ktm agents reboot --agent &lt;hostname|uuid&gt; --confirm      → redémarrer un agent
+  ktm agents maintenance --agent &lt;hostname|uuid&gt; --enable --confirm
+                                                           → arrêter la planification de tests dessus
+
+Les changements d'adaptateurs à chaud, basculements comme paramètres (par
+exemple le bridge ADB, nom d'adaptateur adb_bridge), sont éphémères : après un
+redémarrage de l'agent, c'est de nouveau la configuration propre de l'agent qui
+décide. Pour le bridge ADB, 'ktm adb status|enable|disable' sont les raccourcis
+centrés téléphone.
+
 Utilisez 'resources list' pour obtenir les informations d'appareils au niveau produit.
 
 ## Voir aussi
 
-- [`ktm resources list`](/fr/cli/commands/resources/list)
+- [`ktm agents list`](/fr/cli/commands/agents/list)
+- [`ktm agents get`](/fr/cli/commands/agents/get)
+- [`ktm agents adapters list`](/fr/cli/commands/agents/adapters/list)
+- [`ktm agents adapters get`](/fr/cli/commands/agents/adapters/get)
+- [`ktm agents adapters set`](/fr/cli/commands/agents/adapters/set)
+- [`ktm agents adapters`](/fr/cli/commands/agents/adapters)
+- [`ktm agents reboot`](/fr/cli/commands/agents/reboot)
+- [`ktm agents maintenance`](/fr/cli/commands/agents/maintenance)
 
 <Note>
   Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).

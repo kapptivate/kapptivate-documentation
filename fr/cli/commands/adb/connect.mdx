@@ -11,24 +11,30 @@ Ouvrir un tunnel ADB vers un téléphone distant
 ## Utilisation
 
 ```bash
-ktm adb connect <phone-serial> [flags]
+ktm adb connect [phone-serial] [flags]
 ```
 
 ## Exemples
 
 ```bash
-# Connect to a phone (auto-registers with local ADB server)
-ktm adb connect RF8NB07VDGA
+# Choisir un téléphone interactivement (les téléphones occupés affichent leur détenteur)
+ktm adb connect
 
-# Custom port
-ktm adb connect RF8NB07VDGA --port 7037
+# Se connecter à un téléphone précis (enregistrement automatique auprès du serveur ADB local)
+ktm adb connect EXAMPLE1234
+
+# Port local personnalisé
+ktm adb connect EXAMPLE1234 --port 7037
+
+# Trouver d'abord un téléphone libre
+ktm adb status
 ```
 
 ## Arguments
 
 | Argument | Requis |
 | --- | --- |
-| `phone-serial` | Oui |
+| `phone-serial` | Non |
 
 ## Flags
 
@@ -38,13 +44,27 @@ ktm adb connect RF8NB07VDGA --port 7037
 
 ## Détails
 
-Démarre un tunnel ADB local vers un téléphone spécifique sur un robot smartphone distant.
+Démarre un tunnel ADB vers un téléphone hébergé sur un agent distant.
 
-Un relais TCP léger fait le pont entre votre serveur ADB local et le téléphone distant via un
-tunnel WebSocket sécurisé. L'appareil s'enregistre automatiquement auprès de votre serveur ADB local,
-pour qu'Android Studio le détecte. Support complet du port forwarding,
-du reverse forwarding et du débogage JDWP : votre vrai serveur ADB local gère
-toutes les questions de protocole.
+Sans argument dans un terminal interactif, vous choisissez un téléphone dans la
+liste des appareils disponibles. Dans un script (ou avec un numéro de série en
+argument), la connexion est directe.
+
+Le téléphone est exposé sur un port local et s'enregistre automatiquement auprès
+de votre serveur ADB local, pour qu'Android Studio le détecte comme un appareil
+branché localement. Le port forwarding, le reverse forwarding et le débogage
+JDWP fonctionnent : votre vrai serveur ADB local gère toutes les questions de
+protocole.
+
+Vous détenez le téléphone en exclusivité tant que vous êtes connecté. Il est
+libéré dès que vous vous déconnectez (Ctrl+C) ; si la session est interrompue
+brutalement, il est libéré automatiquement après quelques minutes.
+
+Le bridge ADB de l'agent doit être activé : s'il est désactivé, connect propose
+de l'activer (terminaux interactifs) ou s'arrête en indiquant la commande
+'ktm adb enable' à exécuter. Le sélecteur affiche pour chaque téléphone son
+agent, l'état du bridge et son détenteur : un téléphone libre est donc visible
+sans recherche séparée ; 'ktm adb status' affiche le même tableau.
 
 ## Voir aussi
 

@@ -1,0 +1,58 @@
+---
+title: "ktm use"
+description: "Afficher ou changer le produit par défaut de l'espace de travail (.ktm.json)"
+sidebarTitle: "use"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Afficher ou changer le produit par défaut de l'espace de travail (.ktm.json)
+
+## Utilisation
+
+```bash
+ktm use [product-slug] [flags]
+```
+
+## Exemples
+
+```bash
+# Afficher le périmètre actuel de l'espace de travail
+ktm use
+
+# Changer le produit par défaut
+ktm use renault~mobile
+```
+
+## Arguments
+
+| Argument | Requis |
+| --- | --- |
+| `product-slug` | Non |
+
+## Détails
+
+Affiche ou change le produit par défaut enregistré dans le .ktm.json de
+l'espace de travail.
+
+Le produit par défaut remplit --product sur les commandes où il n'a pas été
+fourni (les flags explicites l'emportent toujours). Avec plusieurs produits
+configurés, « ktm use » sans argument ouvre un sélecteur interactif dans un
+terminal, ou affiche le périmètre actuel sinon. Le fichier de périmètre est
+découvert à la manière de git : le .ktm.json le plus proche dans le répertoire
+courant ou l'un de ses parents.
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

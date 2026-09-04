@@ -1,0 +1,127 @@
+---
+title: "ktm init"
+description: "Initialiser un espace de travail de création de tests prêt pour les agents (skills, configuration MCP, structure du catalogue)"
+sidebarTitle: "init"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Initialiser un espace de travail de création de tests prêt pour les agents (skills, configuration MCP, structure du catalogue)
+
+## Utilisation
+
+```bash
+ktm init [flags]
+```
+
+## Exemples
+
+```bash
+# Initialiser dans le répertoire courant (assistant interactif sur un TTY)
+ktm init
+
+# Initialiser dans un répertoire précis, en câblant l'URL du MCP d'automatisation
+ktm init --dir ~/work/acme-tests --automation-url https://robot-1.example.com/device-automation/mcp
+
+# Compte multi-opérateurs : épingler l'opérateur de l'espace de travail
+ktm init --operator acme
+
+# Mode agent / CI : aucune question, enveloppe lisible par machine
+ktm init --no-input -o json
+
+# Faire tourner la clé / redécouvrir le robot, en conservant le périmètre enregistré
+ktm init --reconfigure
+
+# Redéfinir le périmètre de l'espace de travail vers un autre opérateur (vide catalog/ et pages/)
+ktm init --reset --operator other
+
+# Après une mise à niveau de ktm : rafraîchir les skills gérés par le CLI, conserver tout le reste
+ktm init --refresh-skills
+
+# Prévisualiser sans rien écrire
+ktm init -n
+```
+
+## Flags
+
+| Flag | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `--automation-url` | string | — | URL du point d'accès MCP kapptivate-automation ; remplace le placeholder dans .mcp.json |
+| `--dir` | string | `.` | Répertoire où installer l'espace de travail (créé s'il n'existe pas) |
+| `-n, --dry-run` | boolean | — | Afficher ce qui serait créé ou mis à jour, sans rien écrire |
+| `--force` | boolean | — | Écraser les fichiers d'espace de travail et les skills embarqués. Les fichiers fusionnés et gérés restent intacts : .claude/settings.local.json, les configs des agents de code connectés, .ktm.json et .ktm.local.json |
+| `--local-key` | boolean | — | Stocker la clé API dans un .ktm.local.json (0600) ignoré par git dans l'espace de travail, au lieu du trousseau de clés OS |
+| `--no-input` | boolean | — | Ne jamais poser de question ; ne prendre les valeurs que des flags (sûr en CI) |
+| `--operator` | string | — | Slug de l'opérateur ciblé par cet espace de travail (enregistré dans .ktm.json). Saute la question de l'assistant sur l'opérateur ; avec --no-input, écrit tel quel |
+| `--reconfigure` | boolean | — | Relancer l'assistant sur un espace de travail configuré, en conservant son identité enregistrée (env, opérateur, produit) : fait seulement tourner/revérifier la clé API et redécouvre le robot d'automatisation. catalog/ et pages/ ne sont pas touchés. Utilisez --reset pour changer d'opérateur, de produit ou d'hôte |
+| `--refresh-skills` | boolean | — | Supprimer et réécrire les dossiers .agents/skills/ et leurs liens .claude/skills/ depuis la version embarquée dans ce binaire (les autres fichiers gardent la sémantique « ignorer si présent ») |
+| `--reset` | boolean | — | Redéfinir le périmètre d'un espace de travail configuré : redemande opérateur/produit/hôte et réécrit .ktm.json. DESTRUCTIF : vide catalog/ sans condition (régénérable) et, après confirmation, pages/ (vos sélecteurs vérifiés à la main) ; avec --no-input, pages/ est vidé sans demander. --reset l'emporte sur --reconfigure |
+| `--wire` | string[] | — | Agents de code auxquels connecter le MCP kapptivate-automation (claude, cursor, vscode, codex, gemini). Écrit des fichiers de configuration au niveau du projet ; utile avec --no-input |
+
+## Détails
+
+Met en place l'espace de travail Kapptivate complet de création de tests pour
+les agents de code IA (Claude Code, Cursor, VS Code, Codex, Gemini CLI,
+OpenCode) dans un répertoire cible, à partir des ressources embarquées dans ce
+binaire :
+
+  .agents/skills/write-kapptivate-test/       skill de création de tests (grammaire JSON, catalogue d'actions)
+  .agents/skills/sync-kapptivate-catalog/     skill de synchronisation du catalogue
+  .agents/skills/classify-kapptivate-result/  skill de tri des résultats (pourquoi une exécution a échoué)
+  .claude/skills/*                            liens vers les trois skills ci-dessus, pour Claude Code
+  CLAUDE.md                                   instructions d'espace de travail pour Claude Code
+  AGENTS.md                                   même contrat pour les autres agents (Codex, Cursor, OpenCode, ...)
+  .mcp.json                                   config MCP kapptivate-automation (ignoré par git)
+  .gitignore                                  garde tout fichier porteur de secrets hors du contrôle de version
+  .ktm.json                                   périmètre de l'espace de travail : opérateur, produits, hôte (versionnable)
+  catalog/INDEX.md                            instantané de l'inventaire plateforme (ébauche)
+  pages/README.md                             conventions de la bibliothèque de sélecteurs vérifiés
+
+Exécutée dans un terminal (et sans .ktm.json existant), la commande lance un
+court assistant qui demande la clé API Kapptivate, l'hôte de la plateforme,
+l'URL du MCP d'automatisation et l'en-tête Authorization du MCP. Sur un espace
+de travail configuré, --reconfigure le relance en conservant l'identité
+enregistrée (fait tourner la clé, redécouvre le robot), tandis que --reset
+redéfinit le périmètre de l'espace de travail (voir les flags ci-dessous).
+La clé API vérifiée est enregistrée dans le trousseau de clés OS (Trousseau
+macOS, Gestionnaire d'identifiants Windows, Secret Service Linux ; repli
+fichier sous ~/.config/kapptivate/) : pas de direnv, pas de chargement
+d'environnement, un fonctionnement identique sous Windows, macOS et Linux.
+--local-key la stocke à la place dans un .ktm.local.json (0600) ignoré par git
+dans l'espace de travail. L'en-tête Authorization du MCP est écrit directement
+dans le .mcp.json ignoré par git. Les pipes, la CI et --no-input sautent
+l'assistant ; la variable d'environnement KAPPTIVATE_API_KEY l'emporte toujours
+sur toute clé stockée.
+
+L'espace de travail cible un seul opérateur. Les comptes ne voyant qu'un
+opérateur sont rattachés automatiquement, sans aucune question ; passez
+--operator &lt;slug&gt; pour en épingler un explicitement (les comptes
+multi-opérateurs créent un espace de travail par opérateur).
+
+La commande est idempotente : les fichiers existants ne sont pas touchés et
+sont rapportés comme « skipped ». Les trois dossiers de skills appartiennent au
+CLI ktm et sont verrouillés sur sa version : après une mise à niveau de ktm,
+exécutez « ktm init --refresh-skills » pour mettre à jour les skills d'un
+espace de travail existant (seuls les dossiers de skills sont réécrits).
+
+Contrairement aux autres commandes ktm, init affiche par défaut un rapport
+lisible par un humain : c'est une commande qu'une personne exécute une fois.
+Les agents qui scriptent init devraient passer --no-input -o json ; l'enveloppe
+JSON inclut les outils détectés et l'endroit où la clé API a été stockée.
+
+Fonctionne hors ligne et ne requiert aucune authentification.
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

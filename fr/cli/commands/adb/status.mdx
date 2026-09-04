@@ -1,0 +1,65 @@
+---
+title: "ktm adb status"
+description: "Afficher les téléphones, l'état du bridge ADB de leur agent et qui est connecté"
+sidebarTitle: "status"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Afficher les téléphones, l'état du bridge ADB de leur agent et qui est connecté
+
+## Utilisation
+
+```bash
+ktm adb status [flags]
+```
+
+## Exemples
+
+```bash
+ktm adb status
+ktm adb status --all
+ktm adb status --output json
+```
+
+## Flags
+
+| Flag | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `--all` | boolean | — | Inclure les téléphones non configurés ou non rattachés à un agent |
+
+## Détails
+
+Une ligne par téléphone Android : l'agent qui l'héberge, l'état (activé ou non)
+du bridge ADB de cet agent et, quand quelqu'un est connecté via
+'ktm adb connect', qui détient le téléphone et depuis quand.
+
+Valeurs de la colonne BRIDGE : on, off (activez avec 'ktm adb enable'), offline
+(agent injoignable), unknown (l'agent n'expose pas de configuration à distance).
+
+BRIDGE et IN USE BY décrivent des sessions adb, une question distincte de la
+disponibilité plateforme affichée par 'ktm resources list' : un téléphone peut y
+être Available alors que quelqu'un le détient ici.
+
+Les téléphones non configurés ou non rattachés à un agent sont omis, puisque
+rien ne peut s'y connecter ; --all les liste aussi.
+
+## Voir aussi
+
+- [`ktm adb`](/fr/cli/commands/adb)
+- [`ktm resources`](/fr/cli/commands/resources)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

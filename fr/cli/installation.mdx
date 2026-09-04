@@ -1,10 +1,10 @@
 ---
 title: Installation
-description: Installez le CLI ktm et authentifiez-le avec votre clé API Kapptivate.
+description: Installez le CLI ktm et connectez-vous via votre navigateur ou une clé API.
 sidebarTitle: Installation
 ---
 
-`ktm` est distribué sous la forme d'un binaire unique et autonome pour Linux, macOS et Windows. Une fois placé sur votre PATH, vous vous authentifiez avec votre clé API Kapptivate et vous êtes prêt.
+`ktm` est distribué sous la forme d'un binaire unique et autonome pour Linux, macOS et Windows. Une fois placé sur votre PATH, vous vous connectez via votre navigateur (ou une clé API) et vous êtes prêt.
 
 ## Installer ktm
 
@@ -27,7 +27,7 @@ irm https://artefacts.kapptivate.com/ktm/install.ps1 | iex
   </Tab>
 </Tabs>
 
-Le script télécharge la dernière version stable de `ktm`, vérifie son checksum et l'ajoute à votre PATH. Définissez `KAPPTIVATE_VERSION=1.4.0` pour fixer une version spécifique.
+Le script télécharge la dernière version stable de `ktm`, vérifie son checksum et l'ajoute à votre PATH. Définissez `KAPPTIVATE_VERSION=1.5.0` pour fixer une version spécifique.
 
 Les préversions sont publiées sur le canal **beta**. Définissez `KAPPTIVATE_CHANNEL=beta` pour installer la dernière :
 
@@ -56,14 +56,23 @@ ktm --version
 
 ## Authentification
 
-`ktm` lit votre clé depuis la variable d'environnement `KAPPTIVATE_API_KEY` :
+Pour un usage interactif, connectez-vous via votre navigateur (OAuth) :
+
+```bash
+ktm login
+ktm status
+```
+
+`ktm login` ouvre votre navigateur pour une connexion sécurisée et stocke la session dans le trousseau de votre système. `ktm whoami` affiche qui est connecté, et `ktm logout` met fin à la session.
+
+Pour la CI et les scripts, utilisez plutôt une clé API. `ktm` la lit depuis la variable d'environnement `KAPPTIVATE_API_KEY` :
 
 ```bash
 export KAPPTIVATE_API_KEY="your-key"
 ktm status
 ```
 
-`ktm status` vérifie la connectivité, l'authentification et la version du CLI en un seul appel. Un résultat propre signifie que vous êtes prêt.
+Quand les deux sont présentes, la clé API a la priorité. `ktm status` vérifie la connectivité, l'authentification et la version du CLI en un seul appel, et nomme le mode d'authentification réellement utilisé. Un résultat propre signifie que vous êtes prêt.
 
 <Tip>
   En CI, stockez la clé comme secret et exposez-la en tant que `KAPPTIVATE_API_KEY`. Ne la codez jamais en dur dans un fichier de workflow.

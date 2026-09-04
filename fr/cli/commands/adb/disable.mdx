@@ -1,0 +1,51 @@
+---
+title: "ktm adb disable"
+description: "Désactiver le bridge ADB sur un agent (met fin aux connexions actives)"
+sidebarTitle: "disable"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Désactiver le bridge ADB sur un agent (met fin aux connexions actives)
+
+## Utilisation
+
+```bash
+ktm adb disable [flags]
+```
+
+## Exemples
+
+```bash
+ktm adb disable --agent phone-hub-01
+ktm adb disable --agent phone-hub-01 --confirm
+```
+
+## Flags
+
+| Flag | Type | Défaut | Description |
+| --- | --- | --- | --- |
+| `--confirm` | boolean | — | Exécuter la désactivation (sans ce flag, affiche un aperçu) |
+
+## Détails
+
+Arrête le bridge ADB sur un agent. Quiconque est connecté à l'un de ses téléphones via 'ktm adb connect' est déconnecté et les téléphones sont libérés. Le basculement est éphémère : après un redémarrage de l'agent, c'est de nouveau la configuration propre de l'agent qui décide.
+
+## Voir aussi
+
+- [`ktm adb`](/fr/cli/commands/adb)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

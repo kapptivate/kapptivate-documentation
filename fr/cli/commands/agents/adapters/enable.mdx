@@ -1,0 +1,54 @@
+---
+title: "ktm agents adapters enable"
+description: "Démarrer un adaptateur contrôlable sur un agent (sans redémarrage de l'agent)"
+sidebarTitle: "enable"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Démarrer un adaptateur contrôlable sur un agent (sans redémarrage de l'agent)
+
+## Utilisation
+
+```bash
+ktm agents adapters enable <adapter> [flags]
+```
+
+## Exemples
+
+```bash
+ktm agents adapters enable adb_bridge --agent phone-hub-01
+```
+
+## Arguments
+
+| Argument | Requis |
+| --- | --- |
+| `adapter` | Oui |
+
+## Détails
+
+Démarre un adaptateur sur un agent, sans redémarrer l'agent. Activer un
+adaptateur déjà en cours d'exécution rapporte un succès et ne change rien.
+
+Le changement est éphémère : après un redémarrage de l'agent, c'est de nouveau
+la configuration propre de l'agent qui décide.
+
+## Voir aussi
+
+- [`ktm agents adapters`](/fr/cli/commands/agents/adapters)
+
+<Note>
+  Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).
+</Note>
+
+## Et ensuite ?
+
+<Columns cols={2}>
+  <Card title="Toutes les commandes" icon="terminal" href="/fr/cli/commands/overview">
+    Parcourir la référence complète du CLI.
+  </Card>
+  <Card title="Premiers pas" icon="rocket" href="/fr/cli/getting-started">
+    Installer le CLI et s'authentifier.
+  </Card>
+</Columns>

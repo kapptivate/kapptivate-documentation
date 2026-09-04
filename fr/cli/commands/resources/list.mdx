@@ -58,6 +58,9 @@ Pour la création de tests : ces identifiants sont utilisés comme champ "owner"
   Web-agent hostname       : owner pour les types d'action ETHERNET (ETH_HTTP_API, ETH_PING, etc.)
   Smartphone UUID          : owner pour les types d'action SMARTPHONE
 
+Les applications installées sur les smartphones ne font pas partie de ce listing : utilisez
+"ktm resources get &lt;serial&gt; --include-apps" pour voir les applications d'un appareil.
+
 Le statut SIM et smartphone est un objet avec des champs value et detail (ex.
 "Available", "Disconnected (Sim not inserted)"). Le statut EthernetAgent est un booléen.
 Par défaut, seules les ressources disponibles/en ligne sont affichées ; utilisez --available=false pour inclure
@@ -66,6 +69,7 @@ les ressources hors ligne.
 ## Voir aussi
 
 - [`ktm resources`](/fr/cli/commands/resources)
+- [`ktm resources get`](/fr/cli/commands/resources/get)
 - [`ktm ci build`](/fr/cli/commands/ci/build)
 - [`ktm products list`](/fr/cli/commands/products/list)
 

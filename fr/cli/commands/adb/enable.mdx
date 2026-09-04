@@ -1,29 +1,32 @@
 ---
-title: "ktm executions"
-description: "Executions : résultats d'exécution de campagnes avec données de réussite/échec par test"
-sidebarTitle: "executions"
+title: "ktm adb enable"
+description: "Activer le bridge ADB sur un agent (sans redémarrage de l'agent)"
+sidebarTitle: "enable"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Executions : résultats d'exécution de campagnes avec données de réussite/échec par test
+Activer le bridge ADB sur un agent (sans redémarrage de l'agent)
 
 ## Utilisation
 
 ```bash
-ktm executions [flags]
+ktm adb enable [flags]
 ```
 
-## Sous-commandes
+## Exemples
 
-<Columns cols={2}>
-  <Card title="get" icon="angle-right" href="/fr/cli/commands/executions/get">
-    Obtenir les résultats détaillés d'une exécution de test
-  </Card>
-  <Card title="list" icon="angle-right" href="/fr/cli/commands/executions/list">
-    Lister les exécutions de tests récentes d'un produit
-  </Card>
-</Columns>
+```bash
+ktm adb enable --agent phone-hub-01
+```
+
+## Détails
+
+Démarre le bridge ADB sur un agent pour que ses téléphones acceptent 'ktm adb connect'. Le basculement est éphémère : après un redémarrage de l'agent, c'est de nouveau la configuration propre de l'agent qui décide.
+
+## Voir aussi
+
+- [`ktm adb`](/fr/cli/commands/adb)
 
 <Note>
   Les flags globaux (`--output`, `--debug`, `--host`, ...) s'appliquent à toutes les commandes. Voir la [présentation de la référence des commandes](/fr/cli/commands/overview).

@@ -17,18 +17,26 @@ ktm agents reboot [flags]
 ## Exemples
 
 ```bash
-ktm agents reboot --uuid abc-123 --type cellular --confirm
-ktm agents reboot --uuid abc-123 --type cellular --slot 3 --confirm
+ktm agents reboot --agent gsm-gateway-01 --confirm
+ktm agents reboot --agent gsm-gateway-01 --slot 3 --confirm
 ```
 
 ## Flags
 
 | Flag | Type | Défaut | Description |
 | --- | --- | --- | --- |
+| `--agent` | string | — | Nom d'hôte ou UUID de l'agent (requis) |
 | `--confirm` | boolean | — | Exécuter le redémarrage (sans ce flag, affiche un aperçu) |
 | `--slot` | int | — | ID du slot SIM (cellular uniquement) |
-| `--type` | string | — | Type d'agent : cellular, ethernet, smartphone (requis) |
-| `--uuid` | string | — | UUID de l'agent (requis) |
+| `--type` | string | — | Type d'agent : cellular, ethernet, smartphone (déduit d'un nom d'hôte) |
+
+## Détails
+
+Redémarre un agent, ou un slot SIM d'un agent cellular.
+
+--agent accepte l'un ou l'autre des identifiants : le nom d'hôte de l'agent ou
+son UUID. --type ne sert qu'à lever l'ambiguïté d'un UUID : avec un nom d'hôte,
+le type de l'agent est retrouvé automatiquement.
 
 ## Voir aussi
 

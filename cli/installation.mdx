@@ -1,10 +1,10 @@
 ---
 title: Installation
-description: Install the ktm CLI and authenticate it with your Kapptivate API key.
+description: Install the ktm CLI and sign in with your browser or an API key.
 sidebarTitle: Installation
 ---
 
-`ktm` ships as a single self-contained binary for Linux, macOS, and Windows. Once it is on your PATH, you authenticate with your Kapptivate API key and you are ready to go.
+`ktm` ships as a single self-contained binary for Linux, macOS, and Windows. Once it is on your PATH, you sign in with your browser (or an API key) and you are ready to go.
 
 ## Install ktm
 
@@ -27,7 +27,7 @@ irm https://artefacts.kapptivate.com/ktm/install.ps1 | iex
   </Tab>
 </Tabs>
 
-The installer fetches the latest stable `ktm`, verifies its checksum, and adds it to your PATH. Set `KAPPTIVATE_VERSION=1.4.0` to pin a specific version.
+The installer fetches the latest stable `ktm`, verifies its checksum, and adds it to your PATH. Set `KAPPTIVATE_VERSION=1.5.0` to pin a specific version.
 
 Prereleases ship on the **beta** channel. Set `KAPPTIVATE_CHANNEL=beta` to install the latest one:
 
@@ -56,14 +56,23 @@ ktm --version
 
 ## Authenticate
 
-`ktm` reads your key from the `KAPPTIVATE_API_KEY` environment variable:
+For interactive use, sign in with your browser (OAuth):
+
+```bash
+ktm login
+ktm status
+```
+
+`ktm login` opens your browser for a secure sign-in and stores the session in your OS keychain. `ktm whoami` shows who is signed in, and `ktm logout` ends the session.
+
+For CI and scripts, use an API key instead. `ktm` reads it from the `KAPPTIVATE_API_KEY` environment variable:
 
 ```bash
 export KAPPTIVATE_API_KEY="your-key"
 ktm status
 ```
 
-`ktm status` checks connectivity, authentication, and the CLI version in one call. A clean result means you are ready.
+When both are present, the API key takes precedence. `ktm status` checks connectivity, authentication, and the CLI version in one call, and names the credential actually in use. A clean result means you are ready.
 
 <Tip>
   In CI, store the key as a secret and expose it as `KAPPTIVATE_API_KEY`. Never hard-code it in a workflow file.

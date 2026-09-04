@@ -17,18 +17,26 @@ ktm agents maintenance [flags]
 ## Exemples
 
 ```bash
-ktm agents maintenance --uuid abc-123 --enable --confirm
-ktm agents maintenance --uuid abc-123 --disable --confirm
+ktm agents maintenance --agent phone-hub-01 --enable --confirm
+ktm agents maintenance --agent phone-hub-01 --disable --confirm
 ```
 
 ## Flags
 
 | Flag | Type | Défaut | Description |
 | --- | --- | --- | --- |
+| `--agent` | string | — | Nom d'hôte ou UUID de l'agent (requis) |
 | `--confirm` | boolean | — | Exécuter le basculement (sans ce flag, affiche un aperçu) |
 | `--disable` | boolean | — | Désactiver le mode maintenance |
 | `--enable` | boolean | — | Activer le mode maintenance |
-| `--uuid` | string | — | UUID de l'agent (requis) |
+
+## Détails
+
+Arrête ou reprend l'exécution de tests sur un agent.
+
+--agent accepte l'un ou l'autre des identifiants : le nom d'hôte de l'agent ou
+son UUID. La maintenance s'applique à tous les types d'agents, aucun --type
+n'est donc nécessaire.
 
 ## Voir aussi
 
