@@ -4,31 +4,49 @@ description: Tunnel a smartphone from the device farm to your local machine for 
 sidebarTitle: Device farm (ADB)
 ---
 
-Developers can attach a phone from the device farm to their local machine over a secure tunnel, so `adb`, Android Studio, and JDWP debugging work against a remote device as if it were plugged in. This is handy when authoring or debugging smartphone tests.
+Attach a phone from the device farm to your local machine over a secure tunnel: `adb`, Android Studio, and JDWP debugging all work against the remote device as if it were plugged in. This is handy when authoring or debugging smartphone tests.
+
+Each agent runs an ADB bridge that exposes its phones for remote debugging. The bridge is off by default: you turn it on per agent, connect, and turn it off when you are done.
 
 ## Connect a phone
 
 <Steps>
   <Step title="Find the device">
-    `ktm resources list --product acme~web --type smartphone -o table` lists the smartphones you can reach. See [Devices lab](/equipment/devices-lab).
+    `ktm adb status` shows every phone with its agent, the bridge state, and who currently holds it. To browse by product instead, `ktm resources list --product acme~web --type smartphone -o table` lists the smartphones you can reach. See [Devices lab](/equipment/devices-lab).
   </Step>
   <Step title="Open the tunnel">
-    `ktm adb connect <phone-serial>` starts a local ADB tunnel to that phone.
+    `ktm adb connect <phone-serial>` tunnels that phone to your local ADB server. If the agent's bridge is off, the command offers to turn it on for you. On an interactive terminal, plain `ktm adb connect` lets you pick a phone from a list.
   </Step>
   <Step title="Use it locally">
-    The device auto-registers with your local ADB server, so `adb devices` shows it and Android Studio picks it up.
+    The device auto-registers with your local ADB server, so `adb devices` shows it and Android Studio picks it up. Port forwarding, reverse forwarding, and JDWP all work: your real local ADB server handles the protocol.
+  </Step>
+  <Step title="Release it">
+    Disconnect with Ctrl+C and the phone is released immediately for the next person. To switch a robot off for remote debugging entirely, `ktm adb disable --agent <hostname> --confirm` turns its bridge off and frees its phones.
   </Step>
 </Steps>
 
 ```bash
-# Connect (the device registers with your local ADB server on port 6037)
+# Pick a phone interactively
+ktm adb connect
+
+# Connect a specific phone (registers with your local ADB server on port 6037)
 ktm adb connect RF8NB07VDGA
 
 # Use a custom local port
 ktm adb connect RF8NB07VDGA --port 7037
+
+# Manage the bridge yourself (instant, no agent restart)
+ktm adb enable --agent robot-lab-3
+ktm adb disable --agent robot-lab-3 --confirm
 ```
 
-A thin TCP relay bridges your local ADB server to the remote phone over a secure WebSocket tunnel, with full support for port forwarding, reverse forwarding, and JDWP debugging. Your real local ADB server handles all protocol concerns.
+The tunnel is a secure TLS connection on port 443. If your machine can reach the platform, it can debug a phone: no VPN and no firewall changes.
+
+## Exclusive access
+
+You hold the phone exclusively while you are connected, and it is released the moment you disconnect. If your session ends uncleanly (network drop, killed terminal), the phone auto-releases after a few minutes.
+
+Before grabbing a device, check `ktm adb status` to see who holds what. Enabling the bridge on an agent reverts to that agent's configured default on its next restart.
 
 ## What's Next?
 
