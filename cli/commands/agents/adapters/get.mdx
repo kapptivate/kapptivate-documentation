@@ -1,0 +1,62 @@
+---
+title: "ktm agents adapters get"
+description: "Show an adapter's settings, their types and which can be changed"
+sidebarTitle: "get"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Show an adapter's settings, their types and which can be changed
+
+## Usage
+
+```bash
+ktm agents adapters get <adapter> [flags]
+```
+
+## Examples
+
+```bash
+ktm agents adapters get adb_bridge --agent phone-hub-01
+ktm agents adapters get adb_bridge --agent phone-hub-01 --resource EXAMPLE1234
+ktm agents adapters get adb_bridge --agent phone-hub-01 --output json
+```
+
+## Arguments
+
+| Argument | Required |
+| --- | --- |
+| `adapter` | Yes |
+
+## Flags
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--resource` | string | — | Phone serial — show the values in force for that phone only |
+
+## Details
+
+Shows one adapter's settings: the key to pass to 'set', its type, the value in
+force, the accepted values for a choice, and whether it can be changed at all.
+
+With --resource &lt;serial&gt;, shows the values in force for that phone — a phone
+either has its own override or follows the agent-wide value.
+
+## Related
+
+- [`ktm agents adapters`](/cli/commands/agents/adapters)
+
+<Note>
+  Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="All commands" icon="terminal" href="/cli/commands/overview">
+    Browse the full CLI reference.
+  </Card>
+  <Card title="Get started" icon="rocket" href="/cli/getting-started">
+    Install the CLI and authenticate.
+  </Card>
+</Columns>

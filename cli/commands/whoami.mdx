@@ -1,17 +1,27 @@
 ---
 title: "ktm whoami"
-description: "Show the currently logged-in user (from the stored OAuth token)"
+description: "Show the identity the CLI authenticates as (API key or stored OAuth token)"
 sidebarTitle: "whoami"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Show the currently logged-in user (from the stored OAuth token)
+Show the identity the CLI authenticates as (API key or stored OAuth token)
 
 ## Usage
 
 ```bash
 ktm whoami [flags]
+```
+
+## Examples
+
+```bash
+# Show the identity behind the effective credentials
+ktm whoami
+
+# Machine-readable envelope for scripts
+ktm whoami -o json
 ```
 
 ## Flags
@@ -23,12 +33,16 @@ ktm whoami [flags]
 
 ## Details
 
-Display the identity carried by the stored OAuth token: subject (user ID),
-email, granted scopes, issuer, and time until expiry.
+Display the identity behind the CLI's effective credentials, mirroring the
+same resolution order every other command uses:
 
-This is a local-only read; it does NOT call the Authorization Server.
-Information shown is read directly from the JWT payload (unverified
-display only).
+  1. API key (--api-key-file, then KAPPTIVATE_API_KEY) — exchanged against the
+     platform for a JWT; identity claims are decoded from it (one network call).
+  2. Stored OAuth token from 'ktm login' — local-only read, no network.
+
+Exit code 0 means the CLI has working credentials; 2 means it does not
+(no credentials, expired token, or a rejected API key). Claims are shown as
+unverified display values decoded from the JWT payload.
 
 <Note>
   Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).

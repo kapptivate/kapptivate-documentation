@@ -1,12 +1,12 @@
 ---
 title: "CLI command reference"
-description: "Every ktm command, grouped by resource (26 top-level commands)."
+description: "Every ktm command, grouped by resource (28 top-level commands)."
 sidebarTitle: "Overview"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-The `ktm` CLI groups commands by resource. It exposes **138 commands** across 26 top-level groups. Pick a group below, or use the sidebar.
+The `ktm` CLI groups commands by resource. It exposes **149 commands** across 28 top-level groups. Pick a group below, or use the sidebar.
 
 ## Global flags
 
@@ -27,10 +27,10 @@ These flags apply to every command:
 
 <Columns cols={2}>
   <Card title="adb" icon="angle-right" href="/cli/commands/adb">
-    ADB — remote Android Debug Bridge tunnel to smartphone robots
+    ADB — use remote phones as if they were plugged into your machine
   </Card>
   <Card title="agents" icon="angle-right" href="/cli/commands/agents">
-    Agents — infrastructure health, capacity, and management
+    Agents — infrastructure health, capacity, and runtime feature control
   </Card>
   <Card title="alerts" icon="angle-right" href="/cli/commands/alerts">
     Alert definitions — persistent rules that automatically trigger incidents on the platform
@@ -52,6 +52,9 @@ These flags apply to every command:
   </Card>
   <Card title="incidents" icon="angle-right" href="/cli/commands/incidents">
     Incidents — triggered alerts on the platform (OPEN, CLOSED, MANUALLY_CLOSED)
+  </Card>
+  <Card title="init" icon="angle-right" href="/cli/commands/init">
+    Scaffold an agent-ready test-authoring workspace (skills, MCP config, catalog layout)
   </Card>
   <Card title="login" icon="angle-right" href="/cli/commands/login">
     Authenticate against Kapptivate via OAuth 2.1 + PKCE
@@ -95,6 +98,9 @@ These flags apply to every command:
   <Card title="update" icon="angle-right" href="/cli/commands/update">
     Update ktm to the latest release (or a specific version)
   </Card>
+  <Card title="use" icon="angle-right" href="/cli/commands/use">
+    Show or switch the workspace's default product (.ktm.json)
+  </Card>
   <Card title="users" icon="angle-right" href="/cli/commands/users">
     Users — human users and service accounts with access to the platform
   </Card>
@@ -102,7 +108,7 @@ These flags apply to every command:
     Variables, groups, and variants — product-scoped configuration
   </Card>
   <Card title="whoami" icon="angle-right" href="/cli/commands/whoami">
-    Show the currently logged-in user (from the stored OAuth token)
+    Show the identity the CLI authenticates as (API key or stored OAuth token)
   </Card>
 </Columns>
 

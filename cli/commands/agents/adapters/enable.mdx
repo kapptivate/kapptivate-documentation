@@ -1,44 +1,42 @@
 ---
-title: "ktm test-campaigns delete"
-description: "Delete a Tests campaign (hard delete, no trash)"
-sidebarTitle: "delete"
+title: "ktm agents adapters enable"
+description: "Start a controllable adapter on an agent (no agent restart)"
+sidebarTitle: "enable"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Delete a Tests campaign (hard delete, no trash)
+Start a controllable adapter on an agent (no agent restart)
 
 ## Usage
 
 ```bash
-ktm test-campaigns delete <id> [flags]
+ktm agents adapters enable <adapter> [flags]
 ```
 
 ## Examples
 
 ```bash
-ktm test-campaigns delete 42 --yes
+ktm agents adapters enable adb_bridge --agent phone-hub-01
 ```
 
 ## Arguments
 
 | Argument | Required |
 | --- | --- |
-| `id` | Yes |
-
-## Flags
-
-| Flag | Type | Default | Description |
-| --- | --- | --- | --- |
-| `--yes` | boolean | — | Confirm the delete |
+| `adapter` | Yes |
 
 ## Details
 
-Hard-deletes the Tests campaign. Refuses without --yes.
+Starts an adapter on an agent, without restarting the agent. Enabling an
+adapter that is already running reports success and changes nothing.
+
+The change is ephemeral: after an agent restart, the agent's own configuration
+decides again.
 
 ## Related
 
-- [`ktm test-campaigns`](/cli/commands/test-campaigns)
+- [`ktm agents adapters`](/cli/commands/agents/adapters)
 
 <Note>
   Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).

@@ -1,44 +1,39 @@
 ---
-title: "ktm test-campaigns delete"
-description: "Delete a Tests campaign (hard delete, no trash)"
-sidebarTitle: "delete"
+title: "ktm adb disable"
+description: "Turn off the ADB bridge on an agent (terminates active connections)"
+sidebarTitle: "disable"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Delete a Tests campaign (hard delete, no trash)
+Turn off the ADB bridge on an agent (terminates active connections)
 
 ## Usage
 
 ```bash
-ktm test-campaigns delete <id> [flags]
+ktm adb disable [flags]
 ```
 
 ## Examples
 
 ```bash
-ktm test-campaigns delete 42 --yes
+ktm adb disable --agent phone-hub-01
+ktm adb disable --agent phone-hub-01 --confirm
 ```
-
-## Arguments
-
-| Argument | Required |
-| --- | --- |
-| `id` | Yes |
 
 ## Flags
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--yes` | boolean | — | Confirm the delete |
+| `--confirm` | boolean | — | Execute the disable (without this, shows preview) |
 
 ## Details
 
-Hard-deletes the Tests campaign. Refuses without --yes.
+Stops the ADB bridge on an agent. Anyone connected to one of its phones through 'ktm adb connect' is disconnected and the phones are freed. The toggle is ephemeral: after an agent restart, the agent's own configuration decides again.
 
 ## Related
 
-- [`ktm test-campaigns`](/cli/commands/test-campaigns)
+- [`ktm adb`](/cli/commands/adb)
 
 <Note>
   Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).

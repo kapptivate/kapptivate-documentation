@@ -34,6 +34,9 @@ ktm tests create --from-file test.json --product acme~web \
 
 # Auto-correct declared input_variable kinds when they don't match the platform's variable types
 ktm tests create --from-file test.json --product acme~web --auto-correct-kinds
+
+# Bypass the client-side validator when it lags the engine (platform still validates)
+ktm tests create --from-file test.json --product acme~web --skip-validation
 ```
 
 ## Flags
@@ -45,6 +48,7 @@ ktm tests create --from-file test.json --product acme~web --auto-correct-kinds
 | `--kind` | int | `1` | Test kind: 1=test, 2=reusable component |
 | `--name` | string | — | Override the test name from the JSON file |
 | `--product` | string | — | Product slug (required, format: operator~product) |
+| `--skip-validation` | boolean | — | Bypass the client-side validator (the platform still validates). Use when the CLI validator lags the engine (future step/action types). V3 bucket resolution still runs — the API requires buckets on create. |
 | `--variant` | string[] | — | Pin a variant for one variable group. Repeatable. Forms: '5' (numeric variant ID) or 'API:Staging' (group:variant by name). Groups not pinned use their default variant. |
 
 ## Details

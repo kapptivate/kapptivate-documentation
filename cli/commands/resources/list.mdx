@@ -58,6 +58,9 @@ For test creation: these identifiers are used as the "owner" field in test actio
   Web-agent hostname       → owner for ETHERNET action types (ETH_HTTP_API, ETH_PING, etc.)
   Smartphone UUID          → owner for SMARTPHONE action types
 
+Smartphone installed apps are not part of this listing — use
+"ktm resources get &lt;serial&gt; --include-apps" to see the apps on one device.
+
 SIM and smartphone status is an object with value and detail fields (e.g.
 "Available", "Disconnected (Sim not inserted)"). EthernetAgent status is a boolean.
 By default only available/online resources are shown; use --available=false to include
@@ -66,6 +69,7 @@ offline resources.
 ## Related
 
 - [`ktm resources`](/cli/commands/resources)
+- [`ktm resources get`](/cli/commands/resources/get)
 - [`ktm ci build`](/cli/commands/ci/build)
 - [`ktm products list`](/cli/commands/products/list)
 

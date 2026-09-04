@@ -1,0 +1,56 @@
+---
+title: "ktm use"
+description: "Show or switch the workspace's default product (.ktm.json)"
+sidebarTitle: "use"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Show or switch the workspace's default product (.ktm.json)
+
+## Usage
+
+```bash
+ktm use [product-slug] [flags]
+```
+
+## Examples
+
+```bash
+# Show the current workspace scope
+ktm use
+
+# Switch the default product
+ktm use renault~mobile
+```
+
+## Arguments
+
+| Argument | Required |
+| --- | --- |
+| `product-slug` | No |
+
+## Details
+
+Show or switch the default product recorded in the workspace's .ktm.json.
+
+The default product fills --product on commands where it was not given
+(explicit flags always win). With several products configured, "ktm use"
+without arguments opens an interactive picker on a terminal, or prints the
+current scope otherwise. The scope file is discovered git-style: the nearest
+.ktm.json in the current directory or one of its ancestors.
+
+<Note>
+  Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="All commands" icon="terminal" href="/cli/commands/overview">
+    Browse the full CLI reference.
+  </Card>
+  <Card title="Get started" icon="rocket" href="/cli/getting-started">
+    Install the CLI and authenticate.
+  </Card>
+</Columns>

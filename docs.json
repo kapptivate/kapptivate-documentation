@@ -810,13 +810,22 @@
                     "group": "adb",
                     "pages": [
                       "cli/commands/adb",
-                      "cli/commands/adb/connect"
+                      "cli/commands/adb/connect",
+                      "cli/commands/adb/disable",
+                      "cli/commands/adb/enable",
+                      "cli/commands/adb/status"
                     ]
                   },
                   {
                     "group": "agents",
                     "pages": [
                       "cli/commands/agents",
+                      "cli/commands/agents/adapters",
+                      "cli/commands/agents/adapters/disable",
+                      "cli/commands/agents/adapters/enable",
+                      "cli/commands/agents/adapters/get",
+                      "cli/commands/agents/adapters/list",
+                      "cli/commands/agents/adapters/set",
                       "cli/commands/agents/get",
                       "cli/commands/agents/list",
                       "cli/commands/agents/maintenance",
@@ -897,6 +906,7 @@
                       "cli/commands/incidents/list"
                     ]
                   },
+                  "cli/commands/init",
                   "cli/commands/login",
                   "cli/commands/logout",
                   {
@@ -1013,6 +1023,7 @@
                     ]
                   },
                   "cli/commands/update",
+                  "cli/commands/use",
                   {
                     "group": "users",
                     "pages": [

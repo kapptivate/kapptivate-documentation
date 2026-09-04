@@ -1,22 +1,25 @@
 ---
 title: "ktm agents"
-description: "Agents — infrastructure health, capacity, and management"
+description: "Agents — infrastructure health, capacity, and runtime feature control"
 sidebarTitle: "agents"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Agents — infrastructure health, capacity, and management
+Agents — infrastructure health, capacity, and runtime feature control
 
 ## Usage
 
 ```bash
-ktm agents [command]
+ktm agents [flags]
 ```
 
 ## Subcommands
 
 <Columns cols={2}>
+  <Card title="adapters" icon="angle-right" href="/cli/commands/agents/adapters">
+    List, toggle and configure an agent's runtime-controllable adapters
+  </Card>
   <Card title="get" icon="angle-right" href="/cli/commands/agents/get">
     Get detailed agent info with slots
   </Card>
@@ -40,11 +43,39 @@ Three agent types:
   ethernet    Standalone web agents (no slots, capacity = max parallel tests)
   smartphone  Phone hubs with connected smartphones
 
+Every command below identifies an agent with --agent, which accepts either the
+agent's hostname or its UUID — the HOSTNAME and UUID columns of 'agents list'.
+
+Common tasks:
+  ktm agents list --operator &lt;slug&gt; --type smartphone      → fleet health
+  ktm agents get --agent &lt;hostname|uuid&gt;                   → one agent in detail, with slots
+  ktm agents adapters list --agent &lt;hostname|uuid&gt;         → its runtime-controllable features
+  ktm agents adapters get &lt;name&gt; --agent &lt;hostname|uuid&gt;   → what that feature exposes: settings, types, what is writable
+  ktm agents adapters set &lt;name&gt; KEY=VALUE --agent &lt;hostname|uuid&gt; [--resource &lt;serial&gt;]
+                                                           → change a setting, for the agent or one phone
+  ktm agents adapters enable|disable &lt;name&gt; --agent &lt;hostname|uuid&gt;
+                                                           → start/stop a feature, no agent restart
+  ktm agents reboot --agent &lt;hostname|uuid&gt; --confirm      → reboot an agent
+  ktm agents maintenance --agent &lt;hostname|uuid&gt; --enable --confirm
+                                                           → stop scheduling tests on it
+
+Runtime adapter changes — toggles and settings alike (e.g. the ADB bridge,
+adapter name adb_bridge) — are ephemeral: after an agent restart, the agent's
+own configuration decides again. For the ADB bridge, 'ktm adb
+status|enable|disable' are the phone-centric shortcuts.
+
 Use 'resources list' for product-scoped device info instead.
 
 ## Related
 
-- [`ktm resources list`](/cli/commands/resources/list)
+- [`ktm agents list`](/cli/commands/agents/list)
+- [`ktm agents get`](/cli/commands/agents/get)
+- [`ktm agents adapters list`](/cli/commands/agents/adapters/list)
+- [`ktm agents adapters get`](/cli/commands/agents/adapters/get)
+- [`ktm agents adapters set`](/cli/commands/agents/adapters/set)
+- [`ktm agents adapters`](/cli/commands/agents/adapters)
+- [`ktm agents reboot`](/cli/commands/agents/reboot)
+- [`ktm agents maintenance`](/cli/commands/agents/maintenance)
 
 <Note>
   Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).

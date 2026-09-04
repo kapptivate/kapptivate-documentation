@@ -1,33 +1,32 @@
 ---
-title: "ktm status"
-description: "Check connectivity, authentication, and CLI version"
-sidebarTitle: "status"
+title: "ktm adb enable"
+description: "Turn on the ADB bridge on an agent (no agent restart)"
+sidebarTitle: "enable"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-Check connectivity, authentication, and CLI version
+Turn on the ADB bridge on an agent (no agent restart)
 
 ## Usage
 
 ```bash
-ktm status [flags]
+ktm adb enable [flags]
 ```
 
 ## Examples
 
 ```bash
-ktm status
+ktm adb enable --agent phone-hub-01
 ```
 
 ## Details
 
-Quick health check for the CLI environment.
+Starts the ADB bridge on an agent so its phones accept 'ktm adb connect'. The toggle is ephemeral: after an agent restart, the agent's own configuration decides again.
 
-Reports the configured host, authentication state, CLI version, and API latency.
-Auth shows the credential commands would actually use (an API key takes
-precedence); a stored 'ktm login' session is reported alongside it either way.
-Useful for verifying setup before running commands.
+## Related
+
+- [`ktm adb`](/cli/commands/adb)
 
 <Note>
   Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).

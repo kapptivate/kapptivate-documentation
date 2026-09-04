@@ -1,0 +1,77 @@
+---
+title: "ktm agents adapters"
+description: "List, toggle and configure an agent's runtime-controllable adapters"
+sidebarTitle: "adapters"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+List, toggle and configure an agent's runtime-controllable adapters
+
+## Usage
+
+```bash
+ktm agents adapters [flags]
+```
+
+## Subcommands
+
+<Columns cols={2}>
+  <Card title="disable" icon="angle-right" href="/cli/commands/agents/adapters/disable">
+    Stop a controllable adapter on an agent (terminates any work in progress)
+  </Card>
+  <Card title="enable" icon="angle-right" href="/cli/commands/agents/adapters/enable">
+    Start a controllable adapter on an agent (no agent restart)
+  </Card>
+  <Card title="get" icon="angle-right" href="/cli/commands/agents/adapters/get">
+    Show an adapter's settings, their types and which can be changed
+  </Card>
+  <Card title="list" icon="angle-right" href="/cli/commands/agents/adapters/list">
+    List an agent's controllable adapters and their state
+  </Card>
+  <Card title="set" icon="angle-right" href="/cli/commands/agents/adapters/set">
+    Change an adapter's settings on an agent, or for one phone
+  </Card>
+</Columns>
+
+## Details
+
+Runtime adapter control for a smartphone agent.
+
+Some agent features can be driven while the agent runs — started and stopped,
+and their settings changed, without a restart. The ADB bridge (adapter name:
+adb_bridge) is the first one. Settings apply either to the whole agent or, with
+--resource, to a single phone.
+
+Use 'get' to discover what an adapter exposes: each setting's type, its current
+value, the accepted values, and whether it can be changed at all (some are
+shown for diagnosis only).
+
+Runtime changes are ephemeral: after an agent restart, the agent's own
+configuration decides again.
+
+--agent takes either of the agent's identifiers: its hostname or its UUID (the
+HOSTNAME and UUID columns of 'ktm agents list', or the AGENT column of
+'ktm adb status'). The --resource value is a phone serial — the same identifier
+'ktm adb connect' takes. For the ADB bridge specifically,
+'ktm adb enable|disable' are equivalent shortcuts.
+
+## Related
+
+- [`ktm agents`](/cli/commands/agents)
+- [`ktm adb`](/cli/commands/adb)
+
+<Note>
+  Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="All commands" icon="terminal" href="/cli/commands/overview">
+    Browse the full CLI reference.
+  </Card>
+  <Card title="Get started" icon="rocket" href="/cli/getting-started">
+    Install the CLI and authenticate.
+  </Card>
+</Columns>
