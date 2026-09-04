@@ -1,17 +1,17 @@
 ---
 title: "ktm adb"
-description: "ADB — remote Android Debug Bridge tunnel to smartphone robots"
+description: "ADB — use remote phones as if they were plugged into your machine"
 sidebarTitle: "adb"
 ---
 
 {/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
 
-ADB — remote Android Debug Bridge tunnel to smartphone robots
+ADB — use remote phones as if they were plugged into your machine
 
 ## Usage
 
 ```bash
-ktm adb [command]
+ktm adb [flags]
 ```
 
 ## Subcommands
@@ -20,19 +20,46 @@ ktm adb [command]
   <Card title="connect" icon="angle-right" href="/cli/commands/adb/connect">
     Open an ADB tunnel to a remote phone
   </Card>
+  <Card title="disable" icon="angle-right" href="/cli/commands/adb/disable">
+    Turn off the ADB bridge on an agent (terminates active connections)
+  </Card>
+  <Card title="enable" icon="angle-right" href="/cli/commands/adb/enable">
+    Turn on the ADB bridge on an agent (no agent restart)
+  </Card>
+  <Card title="status" icon="angle-right" href="/cli/commands/adb/status">
+    Show phones, their agent's ADB bridge state, and who is connected
+  </Card>
 </Columns>
 
 ## Details
 
-Connect Android Studio or the ADB CLI to phones on remote smartphone robots.
+Connect Android Studio or the ADB CLI to phones hosted on remote agents.
 
-The tunnel starts a thin TCP relay on your machine. Your local ADB server
-connects to it and traffic is relayed to the phone over a secure WebSocket
-tunnel through the platform's infrastructure. The device auto-registers so
-Android Studio picks it up automatically.
+How it works: each agent runs an "ADB bridge" that exposes its phones for
+remote debugging. The bridge ships OFF — turn it on per agent (instantly, no
+agent restart), connect, and turn it off when you are done:
 
-Each tunnel is scoped to a single phone — you can only see and interact with
-the device you connect to.
+  ktm adb status                              → every phone: agent, bridge on/off, current holder
+  ktm adb enable --agent &lt;hostname&gt;           → turn the bridge on (reverts to the agent's config on restart)
+  ktm adb connect [serial]                    → tunnel a phone to your local ADB server (offers to enable if off)
+  ktm adb disable --agent &lt;hostname&gt; --confirm → turn the bridge off and free its phones
+
+The tunnel is a secure TLS connection on port 443. The device registers with
+your local ADB server automatically, so it appears in Android Studio like a
+phone plugged into your computer.
+
+Only one user can hold a given phone at a time; a second connection is refused
+naming the current holder until they disconnect. The phone is released the
+moment you disconnect. 'ktm adb enable|disable' are shortcuts for the generic
+runtime adapter control — see 'ktm agents adapters --help'.
+
+## Related
+
+- [`ktm adb status`](/cli/commands/adb/status)
+- [`ktm adb enable`](/cli/commands/adb/enable)
+- [`ktm adb connect`](/cli/commands/adb/connect)
+- [`ktm adb disable`](/cli/commands/adb/disable)
+- [`ktm agents adapters`](/cli/commands/agents/adapters)
 
 <Note>
   Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).

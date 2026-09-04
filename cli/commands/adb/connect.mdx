@@ -11,24 +11,30 @@ Open an ADB tunnel to a remote phone
 ## Usage
 
 ```bash
-ktm adb connect <phone-serial> [flags]
+ktm adb connect [phone-serial] [flags]
 ```
 
 ## Examples
 
 ```bash
-# Connect to a phone (auto-registers with local ADB server)
-ktm adb connect RF8NB07VDGA
+# Pick a phone interactively (busy phones show their holder)
+ktm adb connect
 
-# Custom port
-ktm adb connect RF8NB07VDGA --port 7037
+# Connect to a specific phone (auto-registers with local ADB server)
+ktm adb connect EXAMPLE1234
+
+# Custom local port
+ktm adb connect EXAMPLE1234 --port 7037
+
+# Find a free phone first
+ktm adb status
 ```
 
 ## Arguments
 
 | Argument | Required |
 | --- | --- |
-| `phone-serial` | Yes |
+| `phone-serial` | No |
 
 ## Flags
 
@@ -38,13 +44,24 @@ ktm adb connect RF8NB07VDGA --port 7037
 
 ## Details
 
-Starts a local ADB tunnel to a specific phone on a remote smartphone robot.
+Starts an ADB tunnel to a phone hosted on a remote agent.
 
-A thin TCP relay bridges your local ADB server to the remote phone over a
-secure WebSocket tunnel. The device auto-registers with your local ADB server,
-so Android Studio picks it up automatically. Full support for port forwarding,
-reverse forwarding, and JDWP debugging — your real local ADB server handles
-all protocol concerns.
+With no argument on an interactive terminal, you pick a phone from the list of
+available devices. In scripts (or with a serial argument) it connects directly.
+
+The phone is exposed on a local port and registered with your local ADB server
+automatically, so Android Studio picks it up like a locally plugged device.
+Port forwarding, reverse forwarding, and JDWP all work — your real local ADB
+server handles all protocol concerns.
+
+You hold the phone exclusively while connected. It is released the moment you
+disconnect (Ctrl+C); if the session is interrupted uncleanly, it auto-releases
+after a few minutes.
+
+The agent's ADB bridge must be on: if it is off, connect offers to enable it
+(interactive terminals) or exits with the 'ktm adb enable' command to run.
+The picker shows each phone's agent, bridge state and holder, so a free phone
+is visible without a separate lookup; 'ktm adb status' shows the same table.
 
 ## Related
 

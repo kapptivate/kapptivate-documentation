@@ -1,0 +1,122 @@
+---
+title: "ktm init"
+description: "Scaffold an agent-ready test-authoring workspace (skills, MCP config, catalog layout)"
+sidebarTitle: "init"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Scaffold an agent-ready test-authoring workspace (skills, MCP config, catalog layout)
+
+## Usage
+
+```bash
+ktm init [flags]
+```
+
+## Examples
+
+```bash
+# Scaffold into the current directory (interactive wizard on a TTY)
+ktm init
+
+# Scaffold into a specific directory, wiring the automation MCP URL
+ktm init --dir ~/work/acme-tests --automation-url https://robot-1.example.com/device-automation/mcp
+
+# Multi-operator account: pin the workspace's operator
+ktm init --operator acme
+
+# Agent / CI mode: no prompts, machine-readable envelope
+ktm init --no-input -o json
+
+# Rotate the key / re-discover the robot, keeping the recorded scope
+ktm init --reconfigure
+
+# Re-scope the workspace to another operator (clears catalog/ and pages/)
+ktm init --reset --operator other
+
+# After a ktm upgrade: refresh the CLI-owned skills, keep everything else
+ktm init --refresh-skills
+
+# Preview without writing
+ktm init -n
+```
+
+## Flags
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--automation-url` | string | — | URL of the kapptivate-automation MCP endpoint; replaces the placeholder in .mcp.json |
+| `--dir` | string | `.` | Directory to set the workspace up in (created if missing) |
+| `-n, --dry-run` | boolean | — | Print what would be created/updated without writing |
+| `--force` | boolean | — | Overwrite the embedded workspace files and skills. Merged and managed files are left as-is: .claude/settings.local.json, connected coding-agent configs, .ktm.json, and .ktm.local.json |
+| `--local-key` | boolean | — | Store the API key in a git-ignored .ktm.local.json (0600) in the workspace instead of the OS keychain |
+| `--no-input` | boolean | — | Never prompt; take values only from flags (CI-safe) |
+| `--operator` | string | — | Operator slug this workspace targets (recorded in .ktm.json). Skips the wizard's operator question; with --no-input, written as-is |
+| `--reconfigure` | boolean | — | Re-run the wizard on a configured workspace, keeping its recorded identity (env, operator, product): only rotates/re-verifies the API key and re-discovers the automation robot. catalog/ and pages/ are left untouched. Use --reset to change the operator, product, or host |
+| `--refresh-skills` | boolean | — | Delete and rewrite the .agents/skills/ folders and their .claude/skills/ links from this binary's embedded version (other files keep skip-if-exists semantics) |
+| `--reset` | boolean | — | Re-scope a configured workspace: re-ask operator/product/host and rewrite .ktm.json. DESTRUCTIVE — clears catalog/ unconditionally (regenerable) and, after confirmation, pages/ (your hand-verified selectors); with --no-input pages/ is cleared without asking. --reset overrides --reconfigure |
+| `--wire` | string[] | — | Coding agents to connect the kapptivate-automation MCP to (claude, cursor, vscode, codex, gemini). Writes project-scoped config files; useful with --no-input |
+
+## Details
+
+Scaffold the complete Kapptivate test-authoring workspace for AI coding
+agents — Claude Code, Cursor, VS Code, Codex, Gemini CLI, OpenCode — into a
+target directory, from assets embedded in this binary:
+
+  .agents/skills/write-kapptivate-test/       authoring skill (JSON grammar, action catalog)
+  .agents/skills/sync-kapptivate-catalog/     catalog sync skill
+  .agents/skills/classify-kapptivate-result/  result-triage skill (why a run failed)
+  .claude/skills/*                            links to the three skills above, for Claude Code
+  CLAUDE.md                                   workspace instructions for Claude Code
+  AGENTS.md                                   same contract for other agents (Codex, Cursor, OpenCode, ...)
+  .mcp.json                                   kapptivate-automation MCP config (git-ignored)
+  .gitignore                                  keeps every secret-carrying file out of version control
+  .ktm.json                                   workspace scope: operator, products, host (committable)
+  catalog/INDEX.md                            platform inventory snapshot (stub)
+  pages/README.md                             verified-selectors library conventions
+
+When run in a terminal (and no .ktm.json exists yet), a short wizard prompts
+for the Kapptivate API key, platform host, automation MCP URL, and the MCP
+Authorization header. On a configured workspace, --reconfigure re-runs it
+keeping the recorded identity (rotates the key, re-discovers the robot), while
+--reset re-scopes the workspace (see the flags below).
+The verified API key is saved to the OS keychain (macOS Keychain, Windows
+Credential Manager, Linux Secret Service; file fallback under
+~/.config/kapptivate/) — no direnv, no environment loading, works the same on
+Windows, macOS, and Linux. --local-key stores it in a git-ignored
+.ktm.local.json (0600) in the workspace instead. The MCP Authorization header
+is written inline into the git-ignored .mcp.json. Pipes, CI, and --no-input
+skip the wizard; KAPPTIVATE_API_KEY as an environment variable always takes
+precedence over any stored key.
+
+The workspace targets one operator. Accounts seeing a single operator are
+scoped automatically with no questions asked; pass --operator &lt;slug&gt; to pin
+one explicitly (multi-operator accounts scaffold one workspace per operator).
+
+The command is idempotent: existing files are left untouched and reported as
+"skipped". The three skill directories are owned by the ktm CLI and version-locked
+to it — after upgrading ktm, run "ktm init --refresh-skills" to bring an existing
+workspace's skills up to date (only the skill folders are rewritten).
+
+Unlike other ktm commands, init prints a human-readable report by default —
+it is a command a person runs once. Agents scripting init should pass
+--no-input -o json; the JSON envelope includes the detected tools and where
+the API key was stored.
+
+Works offline and requires no authentication.
+
+<Note>
+  Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="All commands" icon="terminal" href="/cli/commands/overview">
+    Browse the full CLI reference.
+  </Card>
+  <Card title="Get started" icon="rocket" href="/cli/getting-started">
+    Install the CLI and authenticate.
+  </Card>
+</Columns>

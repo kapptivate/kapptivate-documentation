@@ -1,0 +1,52 @@
+---
+title: "ktm agents adapters list"
+description: "List an agent's controllable adapters and their state"
+sidebarTitle: "list"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+List an agent's controllable adapters and their state
+
+## Usage
+
+```bash
+ktm agents adapters list [flags]
+```
+
+## Examples
+
+```bash
+ktm agents adapters list --agent phone-hub-01
+ktm agents adapters list --agent phone-hub-01 --output json
+```
+
+## Details
+
+Shows each feature of this agent that can be driven while it runs: whether it
+is running right now, whether it starts with the agent (BOOT), how many live
+sessions it is serving, whether it accepts per-phone settings, and the
+agent-wide settings in force.
+
+Use 'ktm agents adapters get &lt;adapter&gt;' to see what a listed adapter can be
+told to do.
+
+## Related
+
+- [`ktm agents adapters`](/cli/commands/agents/adapters)
+- [`ktm agents adapters get`](/cli/commands/agents/adapters/get)
+
+<Note>
+  Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="All commands" icon="terminal" href="/cli/commands/overview">
+    Browse the full CLI reference.
+  </Card>
+  <Card title="Get started" icon="rocket" href="/cli/getting-started">
+    Install the CLI and authenticate.
+  </Card>
+</Columns>

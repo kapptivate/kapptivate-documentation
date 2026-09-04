@@ -3,8 +3,8 @@
     "kind": "cli",
     "source": "cli-binary",
     "cliName": "ktm",
-    "cliVersion": "1.4.0",
-    "count": 138
+    "cliVersion": "1.5.0",
+    "count": 149
   },
   "globalFlags": [
     {
@@ -74,6 +74,7 @@
     "dashboards",
     "executions",
     "incidents",
+    "init",
     "login",
     "logout",
     "metrics",
@@ -88,6 +89,7 @@
     "test-campaigns",
     "tests",
     "update",
+    "use",
     "users",
     "variables",
     "whoami"
@@ -101,16 +103,19 @@
       ],
       "top": "adb",
       "slug": "adb",
-      "summary": "ADB — remote Android Debug Bridge tunnel to smartphone robots",
-      "description": "Connect Android Studio or the ADB CLI to phones on remote smartphone robots.\n\nThe tunnel starts a thin TCP relay on your machine. Your local ADB server\nconnects to it and traffic is relayed to the phone over a secure WebSocket\ntunnel through the platform's infrastructure. The device auto-registers so\nAndroid Studio picks it up automatically.\n\nEach tunnel is scoped to a single phone — you can only see and interact with\nthe device you connect to.",
-      "usage": "ktm adb [command]",
+      "summary": "ADB — use remote phones as if they were plugged into your machine",
+      "description": "Connect Android Studio or the ADB CLI to phones hosted on remote agents.\n\nHow it works: each agent runs an \"ADB bridge\" that exposes its phones for\nremote debugging. The bridge ships OFF — turn it on per agent (instantly, no\nagent restart), connect, and turn it off when you are done:\n\n  ktm adb status                              → every phone: agent, bridge on/off, current holder\n  ktm adb enable --agent <hostname>           → turn the bridge on (reverts to the agent's config on restart)\n  ktm adb connect [serial]                    → tunnel a phone to your local ADB server (offers to enable if off)\n  ktm adb disable --agent <hostname> --confirm → turn the bridge off and free its phones\n\nThe tunnel is a secure TLS connection on port 443. The device registers with\nyour local ADB server automatically, so it appears in Android Studio like a\nphone plugged into your computer.\n\nOnly one user can hold a given phone at a time; a second connection is refused\nnaming the current holder until they disconnect. The phone is released the\nmoment you disconnect. 'ktm adb enable|disable' are shortcuts for the generic\nruntime adapter control — see 'ktm agents adapters --help'.",
+      "usage": "ktm adb [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
-      "examples": "# List Android phones (use 'resources list' for discovery)\nktm resources list --product acme~mobile --type smartphone -o table\n\n# Connect to a phone\nktm adb connect RF8NB07VDGA",
+      "examples": "# Where can I connect right now? (phones × bridge state × holder)\nktm adb status\n\n# Pick a phone interactively\nktm adb connect\n\n# Connect to a specific phone (scriptable)\nktm adb connect EXAMPLE1234\n\n# Turn an agent's bridge on/off without restarting it\nktm adb enable --agent phone-hub-01\nktm adb disable --agent phone-hub-01 --confirm",
       "isLeaf": false,
       "subcommands": [
-        "connect"
+        "connect",
+        "disable",
+        "enable",
+        "status"
       ]
     },
     {
@@ -123,13 +128,13 @@
       "top": "adb",
       "slug": "adb/connect",
       "summary": "Open an ADB tunnel to a remote phone",
-      "description": "Starts a local ADB tunnel to a specific phone on a remote smartphone robot.\n\nA thin TCP relay bridges your local ADB server to the remote phone over a\nsecure WebSocket tunnel. The device auto-registers with your local ADB server,\nso Android Studio picks it up automatically. Full support for port forwarding,\nreverse forwarding, and JDWP debugging — your real local ADB server handles\nall protocol concerns.",
-      "usage": "ktm adb connect <phone-serial> [flags]",
+      "description": "Starts an ADB tunnel to a phone hosted on a remote agent.\n\nWith no argument on an interactive terminal, you pick a phone from the list of\navailable devices. In scripts (or with a serial argument) it connects directly.\n\nThe phone is exposed on a local port and registered with your local ADB server\nautomatically, so Android Studio picks it up like a locally plugged device.\nPort forwarding, reverse forwarding, and JDWP all work — your real local ADB\nserver handles all protocol concerns.\n\nYou hold the phone exclusively while connected. It is released the moment you\ndisconnect (Ctrl+C); if the session is interrupted uncleanly, it auto-releases\nafter a few minutes.\n\nThe agent's ADB bridge must be on: if it is off, connect offers to enable it\n(interactive terminals) or exits with the 'ktm adb enable' command to run.\nThe picker shows each phone's agent, bridge state and holder, so a free phone\nis visible without a separate lookup; 'ktm adb status' shows the same table.",
+      "usage": "ktm adb connect [phone-serial] [flags]",
       "aliases": "",
       "args": [
         {
           "name": "phone-serial",
-          "required": true
+          "required": false
         }
       ],
       "flags": [
@@ -141,7 +146,80 @@
           "description": "Local port to listen on"
         }
       ],
-      "examples": "# Connect to a phone (auto-registers with local ADB server)\nktm adb connect RF8NB07VDGA\n\n# Custom port\nktm adb connect RF8NB07VDGA --port 7037",
+      "examples": "# Pick a phone interactively (busy phones show their holder)\nktm adb connect\n\n# Connect to a specific phone (auto-registers with local ADB server)\nktm adb connect EXAMPLE1234\n\n# Custom local port\nktm adb connect EXAMPLE1234 --port 7037\n\n# Find a free phone first\nktm adb status",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "adb_disable",
+      "name": "ktm adb disable",
+      "path": [
+        "adb",
+        "disable"
+      ],
+      "top": "adb",
+      "slug": "adb/disable",
+      "summary": "Turn off the ADB bridge on an agent (terminates active connections)",
+      "description": "Stops the ADB bridge on an agent. Anyone connected to one of its phones through 'ktm adb connect' is disconnected and the phones are freed. The toggle is ephemeral: after an agent restart, the agent's own configuration decides again.",
+      "usage": "ktm adb disable [flags]",
+      "aliases": "",
+      "args": [],
+      "flags": [
+        {
+          "short": null,
+          "long": "confirm",
+          "type": "bool",
+          "default": null,
+          "description": "Execute the disable (without this, shows preview)"
+        }
+      ],
+      "examples": "ktm adb disable --agent phone-hub-01\nktm adb disable --agent phone-hub-01 --confirm",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "adb_enable",
+      "name": "ktm adb enable",
+      "path": [
+        "adb",
+        "enable"
+      ],
+      "top": "adb",
+      "slug": "adb/enable",
+      "summary": "Turn on the ADB bridge on an agent (no agent restart)",
+      "description": "Starts the ADB bridge on an agent so its phones accept 'ktm adb connect'. The toggle is ephemeral: after an agent restart, the agent's own configuration decides again.",
+      "usage": "ktm adb enable [flags]",
+      "aliases": "",
+      "args": [],
+      "flags": [],
+      "examples": "ktm adb enable --agent phone-hub-01",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "adb_status",
+      "name": "ktm adb status",
+      "path": [
+        "adb",
+        "status"
+      ],
+      "top": "adb",
+      "slug": "adb/status",
+      "summary": "Show phones, their agent's ADB bridge state, and who is connected",
+      "description": "One row per Android phone: the agent hosting it, whether that agent's ADB\nbridge is on, and — when someone is connected through 'ktm adb connect' — who\nholds the phone and since when.\n\nBRIDGE column values: on, off (enable with 'ktm adb enable'), offline (agent\nunreachable), unknown (the agent does not expose remote configuration).\n\nBRIDGE and IN USE BY describe adb sessions, which is a different question from\nthe platform availability shown by 'ktm resources list': a phone can be\nAvailable there while someone holds it here.\n\nPhones that are not configured or not attached to an agent are left out, since\nnothing can be connected to them; --all lists them too.",
+      "usage": "ktm adb status [flags]",
+      "aliases": "",
+      "args": [],
+      "flags": [
+        {
+          "short": null,
+          "long": "all",
+          "type": "bool",
+          "default": null,
+          "description": "Include phones that are unconfigured or not attached to an agent"
+        }
+      ],
+      "examples": "ktm adb status\nktm adb status --all\nktm adb status --output json",
       "isLeaf": true,
       "subcommands": []
     },
@@ -153,20 +231,197 @@
       ],
       "top": "agents",
       "slug": "agents",
-      "summary": "Agents — infrastructure health, capacity, and management",
-      "description": "Manage agents (the hardware/software that runs resources). Operator-scoped.\n\nThree agent types:\n  cellular    GSM gateways with SIM card slots\n  ethernet    Standalone web agents (no slots, capacity = max parallel tests)\n  smartphone  Phone hubs with connected smartphones\n\nUse 'resources list' for product-scoped device info instead.",
-      "usage": "ktm agents [command]",
+      "summary": "Agents — infrastructure health, capacity, and runtime feature control",
+      "description": "Manage agents (the hardware/software that runs resources). Operator-scoped.\n\nThree agent types:\n  cellular    GSM gateways with SIM card slots\n  ethernet    Standalone web agents (no slots, capacity = max parallel tests)\n  smartphone  Phone hubs with connected smartphones\n\nEvery command below identifies an agent with --agent, which accepts either the\nagent's hostname or its UUID — the HOSTNAME and UUID columns of 'agents list'.\n\nCommon tasks:\n  ktm agents list --operator <slug> --type smartphone      → fleet health\n  ktm agents get --agent <hostname|uuid>                   → one agent in detail, with slots\n  ktm agents adapters list --agent <hostname|uuid>         → its runtime-controllable features\n  ktm agents adapters get <name> --agent <hostname|uuid>   → what that feature exposes: settings, types, what is writable\n  ktm agents adapters set <name> KEY=VALUE --agent <hostname|uuid> [--resource <serial>]\n                                                           → change a setting, for the agent or one phone\n  ktm agents adapters enable|disable <name> --agent <hostname|uuid>\n                                                           → start/stop a feature, no agent restart\n  ktm agents reboot --agent <hostname|uuid> --confirm      → reboot an agent\n  ktm agents maintenance --agent <hostname|uuid> --enable --confirm\n                                                           → stop scheduling tests on it\n\nRuntime adapter changes — toggles and settings alike (e.g. the ADB bridge,\nadapter name adb_bridge) — are ephemeral: after an agent restart, the agent's\nown configuration decides again. For the ADB bridge, 'ktm adb\nstatus|enable|disable' are the phone-centric shortcuts.\n\nUse 'resources list' for product-scoped device info instead.",
+      "usage": "ktm agents [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
-      "examples": "",
+      "examples": "# Is the fleet healthy? Which agents exist?\nktm agents list --operator acme --type smartphone -o table\n\n# What can be driven on this agent right now?\nktm agents adapters list --agent phone-hub-01\n\n# Turn the ADB bridge on for a debugging session, off afterwards\nktm agents adapters enable adb_bridge --agent phone-hub-01\nktm agents adapters disable adb_bridge --agent phone-hub-01 --confirm\n\n# Which settings does it expose, and change one for a single phone\nktm agents adapters get adb_bridge --agent phone-hub-01 -o table\nktm agents adapters set adb_bridge video_quality=low --agent phone-hub-01 --resource EXAMPLE1234",
       "isLeaf": false,
       "subcommands": [
+        "adapters",
         "get",
         "list",
         "maintenance",
         "reboot"
       ]
+    },
+    {
+      "id": "agents_adapters",
+      "name": "ktm agents adapters",
+      "path": [
+        "agents",
+        "adapters"
+      ],
+      "top": "agents",
+      "slug": "agents/adapters",
+      "summary": "List, toggle and configure an agent's runtime-controllable adapters",
+      "description": "Runtime adapter control for a smartphone agent.\n\nSome agent features can be driven while the agent runs — started and stopped,\nand their settings changed, without a restart. The ADB bridge (adapter name:\nadb_bridge) is the first one. Settings apply either to the whole agent or, with\n--resource, to a single phone.\n\nUse 'get' to discover what an adapter exposes: each setting's type, its current\nvalue, the accepted values, and whether it can be changed at all (some are\nshown for diagnosis only).\n\nRuntime changes are ephemeral: after an agent restart, the agent's own\nconfiguration decides again.\n\n--agent takes either of the agent's identifiers: its hostname or its UUID (the\nHOSTNAME and UUID columns of 'ktm agents list', or the AGENT column of\n'ktm adb status'). The --resource value is a phone serial — the same identifier\n'ktm adb connect' takes. For the ADB bridge specifically,\n'ktm adb enable|disable' are equivalent shortcuts.",
+      "usage": "ktm agents adapters [flags]",
+      "aliases": "",
+      "args": [],
+      "flags": [],
+      "examples": "ktm agents adapters list --agent phone-hub-01\nktm agents adapters get adb_bridge --agent phone-hub-01\nktm agents adapters set adb_bridge video_quality=low --agent phone-hub-01\nktm agents adapters set adb_bridge video_quality=native --agent phone-hub-01 --resource EXAMPLE1234\nktm agents adapters enable adb_bridge --agent phone-hub-01\nktm agents adapters disable adb_bridge --agent phone-hub-01 --confirm",
+      "isLeaf": false,
+      "subcommands": [
+        "disable",
+        "enable",
+        "get",
+        "list",
+        "set"
+      ]
+    },
+    {
+      "id": "agents_adapters_disable",
+      "name": "ktm agents adapters disable",
+      "path": [
+        "agents",
+        "adapters",
+        "disable"
+      ],
+      "top": "agents",
+      "slug": "agents/adapters/disable",
+      "summary": "Stop a controllable adapter on an agent (terminates any work in progress)",
+      "description": "Stops an adapter on an agent, without restarting the agent. Anyone using\nthat adapter is interrupted. Without --confirm it previews the change and\nstops nothing.\n\nThe change is ephemeral: after an agent restart, the agent's own configuration\ndecides again.",
+      "usage": "ktm agents adapters disable <adapter> [flags]",
+      "aliases": "",
+      "args": [
+        {
+          "name": "adapter",
+          "required": true
+        }
+      ],
+      "flags": [
+        {
+          "short": null,
+          "long": "confirm",
+          "type": "bool",
+          "default": null,
+          "description": "Execute the disable (without this, shows preview)"
+        }
+      ],
+      "examples": "ktm agents adapters disable adb_bridge --agent phone-hub-01\nktm agents adapters disable adb_bridge --agent phone-hub-01 --confirm",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "agents_adapters_enable",
+      "name": "ktm agents adapters enable",
+      "path": [
+        "agents",
+        "adapters",
+        "enable"
+      ],
+      "top": "agents",
+      "slug": "agents/adapters/enable",
+      "summary": "Start a controllable adapter on an agent (no agent restart)",
+      "description": "Starts an adapter on an agent, without restarting the agent. Enabling an\nadapter that is already running reports success and changes nothing.\n\nThe change is ephemeral: after an agent restart, the agent's own configuration\ndecides again.",
+      "usage": "ktm agents adapters enable <adapter> [flags]",
+      "aliases": "",
+      "args": [
+        {
+          "name": "adapter",
+          "required": true
+        }
+      ],
+      "flags": [],
+      "examples": "ktm agents adapters enable adb_bridge --agent phone-hub-01",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "agents_adapters_get",
+      "name": "ktm agents adapters get",
+      "path": [
+        "agents",
+        "adapters",
+        "get"
+      ],
+      "top": "agents",
+      "slug": "agents/adapters/get",
+      "summary": "Show an adapter's settings, their types and which can be changed",
+      "description": "Shows one adapter's settings: the key to pass to 'set', its type, the value in\nforce, the accepted values for a choice, and whether it can be changed at all.\n\nWith --resource <serial>, shows the values in force for that phone — a phone\neither has its own override or follows the agent-wide value.",
+      "usage": "ktm agents adapters get <adapter> [flags]",
+      "aliases": "",
+      "args": [
+        {
+          "name": "adapter",
+          "required": true
+        }
+      ],
+      "flags": [
+        {
+          "short": null,
+          "long": "resource",
+          "type": "string",
+          "default": null,
+          "description": "Phone serial — show the values in force for that phone only"
+        }
+      ],
+      "examples": "ktm agents adapters get adb_bridge --agent phone-hub-01\nktm agents adapters get adb_bridge --agent phone-hub-01 --resource EXAMPLE1234\nktm agents adapters get adb_bridge --agent phone-hub-01 --output json",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "agents_adapters_list",
+      "name": "ktm agents adapters list",
+      "path": [
+        "agents",
+        "adapters",
+        "list"
+      ],
+      "top": "agents",
+      "slug": "agents/adapters/list",
+      "summary": "List an agent's controllable adapters and their state",
+      "description": "Shows each feature of this agent that can be driven while it runs: whether it\nis running right now, whether it starts with the agent (BOOT), how many live\nsessions it is serving, whether it accepts per-phone settings, and the\nagent-wide settings in force.\n\nUse 'ktm agents adapters get <adapter>' to see what a listed adapter can be\ntold to do.",
+      "usage": "ktm agents adapters list [flags]",
+      "aliases": "",
+      "args": [],
+      "flags": [],
+      "examples": "ktm agents adapters list --agent phone-hub-01\nktm agents adapters list --agent phone-hub-01 --output json",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
+      "id": "agents_adapters_set",
+      "name": "ktm agents adapters set",
+      "path": [
+        "agents",
+        "adapters",
+        "set"
+      ],
+      "top": "agents",
+      "slug": "agents/adapters/set",
+      "summary": "Change an adapter's settings on an agent, or for one phone",
+      "description": "Changes one or more of an adapter's settings without restarting the agent. Run\n'ktm agents adapters get <adapter>' first to see which keys exist and which of\nthem can be changed.\n\nValues are typed: the agent declares each setting's type, and this command sends\nthe value in that form — so a number goes out as a number. Type a value the way\n'get' displays it (video_quality=low, idle_timeout=1800) and the conversion is\nautomatic.\n\nWith --resource <serial>, the change applies to that phone only; an empty value\n(KEY=) removes the override so the phone follows the agent-wide value again. To\nset a setting TO the empty string rather than clear it, use --empty KEY.\n\nUnknown keys and rejected values are refused outright — a change that reports\nsuccess has been applied. Changes are ephemeral: after an agent restart, the\nagent's own configuration decides again.",
+      "usage": "ktm agents adapters set <adapter> KEY=VALUE... [flags]",
+      "aliases": "",
+      "args": [
+        {
+          "name": "adapter",
+          "required": true
+        }
+      ],
+      "flags": [
+        {
+          "short": null,
+          "long": "empty",
+          "type": "stringArray",
+          "default": null,
+          "description": "Set a setting to the empty string (repeatable) — KEY= erases instead"
+        },
+        {
+          "short": null,
+          "long": "resource",
+          "type": "string",
+          "default": null,
+          "description": "Phone serial — apply to that phone only (KEY= clears its override)"
+        }
+      ],
+      "examples": "ktm agents adapters set adb_bridge video_quality=low --agent phone-hub-01\nktm agents adapters set adb_bridge video_quality=standard --agent phone-hub-01\nktm agents adapters set adb_bridge video_quality=native --agent phone-hub-01 --resource EXAMPLE1234\nktm agents adapters set adb_bridge video_quality= --agent phone-hub-01 --resource EXAMPLE1234\n# --empty KEY sets a free-text setting to \"\" (KEY= erases instead) — see 'get' for which keys exist",
+      "isLeaf": true,
+      "subcommands": []
     },
     {
       "id": "agents_get",
@@ -178,27 +433,27 @@
       "top": "agents",
       "slug": "agents/get",
       "summary": "Get detailed agent info with slots",
-      "description": "Get detailed agent info with slots",
+      "description": "Show one agent's health, capacity and slots.\n\n--agent takes either identifier: the agent's hostname or its UUID (the HOSTNAME and\nUUID columns of 'ktm agents list'). --type is only needed to disambiguate a UUID —\nwith a hostname the agent's type is looked up.",
       "usage": "ktm agents get [flags]",
       "aliases": "",
       "args": [],
       "flags": [
         {
           "short": null,
-          "long": "type",
+          "long": "agent",
           "type": "string",
           "default": null,
-          "description": "Agent type: cellular, ethernet, smartphone (required)"
+          "description": "Agent hostname or UUID (required)"
         },
         {
           "short": null,
-          "long": "uuid",
+          "long": "type",
           "type": "string",
           "default": null,
-          "description": "Agent UUID (required)"
+          "description": "Agent type: cellular, ethernet, smartphone (inferred from a hostname)"
         }
       ],
-      "examples": "ktm agents get --uuid abc-123 --type cellular\nktm agents get --uuid def-456 --type ethernet",
+      "examples": "ktm agents get --agent phone-hub-01\nktm agents get --agent 7f3c9b21-4d6e-4a51-9ab2-1c8e5f0d3a77 --type cellular",
       "isLeaf": true,
       "subcommands": []
     },
@@ -253,11 +508,18 @@
       "top": "agents",
       "slug": "agents/maintenance",
       "summary": "Toggle maintenance mode for an agent",
-      "description": "Toggle maintenance mode for an agent",
+      "description": "Stop or resume test execution on an agent.\n\n--agent takes either identifier: the agent's hostname or its UUID. Maintenance applies\nto every agent type, so no --type is needed.",
       "usage": "ktm agents maintenance [flags]",
       "aliases": "",
       "args": [],
       "flags": [
+        {
+          "short": null,
+          "long": "agent",
+          "type": "string",
+          "default": null,
+          "description": "Agent hostname or UUID (required)"
+        },
         {
           "short": null,
           "long": "confirm",
@@ -278,16 +540,9 @@
           "type": "bool",
           "default": null,
           "description": "Enable maintenance mode"
-        },
-        {
-          "short": null,
-          "long": "uuid",
-          "type": "string",
-          "default": null,
-          "description": "Agent UUID (required)"
         }
       ],
-      "examples": "ktm agents maintenance --uuid abc-123 --enable --confirm\nktm agents maintenance --uuid abc-123 --disable --confirm",
+      "examples": "ktm agents maintenance --agent phone-hub-01 --enable --confirm\nktm agents maintenance --agent phone-hub-01 --disable --confirm",
       "isLeaf": true,
       "subcommands": []
     },
@@ -301,11 +556,18 @@
       "top": "agents",
       "slug": "agents/reboot",
       "summary": "Reboot an agent or a specific SIM slot",
-      "description": "Reboot an agent or a specific SIM slot",
+      "description": "Restart an agent, or one SIM slot on a cellular agent.\n\n--agent takes either identifier: the agent's hostname or its UUID. --type is only\nneeded to disambiguate a UUID — with a hostname the agent's type is looked up.",
       "usage": "ktm agents reboot [flags]",
       "aliases": "",
       "args": [],
       "flags": [
+        {
+          "short": null,
+          "long": "agent",
+          "type": "string",
+          "default": null,
+          "description": "Agent hostname or UUID (required)"
+        },
         {
           "short": null,
           "long": "confirm",
@@ -325,17 +587,10 @@
           "long": "type",
           "type": "string",
           "default": null,
-          "description": "Agent type: cellular, ethernet, smartphone (required)"
-        },
-        {
-          "short": null,
-          "long": "uuid",
-          "type": "string",
-          "default": null,
-          "description": "Agent UUID (required)"
+          "description": "Agent type: cellular, ethernet, smartphone (inferred from a hostname)"
         }
       ],
-      "examples": "ktm agents reboot --uuid abc-123 --type cellular --confirm\nktm agents reboot --uuid abc-123 --type cellular --slot 3 --confirm",
+      "examples": "ktm agents reboot --agent gsm-gateway-01 --confirm\nktm agents reboot --agent gsm-gateway-01 --slot 3 --confirm",
       "isLeaf": true,
       "subcommands": []
     },
@@ -349,7 +604,7 @@
       "slug": "alerts",
       "summary": "Alert definitions — persistent rules that automatically trigger incidents on the platform",
       "description": "Alert definitions — persistent rules that automatically trigger incidents on the platform",
-      "usage": "ktm alerts [command]",
+      "usage": "ktm alerts [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -445,7 +700,7 @@
       "slug": "artifacts",
       "summary": "Artifacts — fetch screenshots, recordings, and other test artifacts",
       "description": "Artifacts — fetch screenshots, recordings, and other test artifacts",
-      "usage": "ktm artifacts [command]",
+      "usage": "ktm artifacts [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -513,7 +768,7 @@
       "slug": "ci",
       "summary": "CI/CD test execution — run tests from JSON config files and report results",
       "description": "CI/CD test execution — run tests from JSON config files and report results",
-      "usage": "ktm ci [command]",
+      "usage": "ktm ci [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -679,7 +934,7 @@
       "slug": "collections",
       "summary": "Collections — hierarchical tree of tests and dashboards",
       "description": "Collections — hierarchical tree of tests and dashboards",
-      "usage": "ktm collections [command]",
+      "usage": "ktm collections [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -1106,7 +1361,7 @@
       "slug": "dashboards",
       "summary": "Dashboards — operator-level analytics dashboards with metric widgets",
       "description": "Dashboards — operator-level analytics dashboards with metric widgets",
-      "usage": "ktm dashboards [command]",
+      "usage": "ktm dashboards [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -1551,7 +1806,7 @@
       "slug": "executions",
       "summary": "Executions — campaign run results with per-test pass/fail data",
       "description": "Executions — campaign run results with per-test pass/fail data",
-      "usage": "ktm executions [command]",
+      "usage": "ktm executions [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -1686,7 +1941,7 @@
       "slug": "incidents",
       "summary": "Incidents — triggered alerts on the platform (OPEN, CLOSED, MANUALLY_CLOSED)",
       "description": "Incidents — triggered alerts on the platform (OPEN, CLOSED, MANUALLY_CLOSED)",
-      "usage": "ktm incidents [command]",
+      "usage": "ktm incidents [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -1920,6 +2175,102 @@
       "subcommands": []
     },
     {
+      "id": "init",
+      "name": "ktm init",
+      "path": [
+        "init"
+      ],
+      "top": "init",
+      "slug": "init",
+      "summary": "Scaffold an agent-ready test-authoring workspace (skills, MCP config, catalog layout)",
+      "description": "Scaffold the complete Kapptivate test-authoring workspace for AI coding\nagents — Claude Code, Cursor, VS Code, Codex, Gemini CLI, OpenCode — into a\ntarget directory, from assets embedded in this binary:\n\n  .agents/skills/write-kapptivate-test/       authoring skill (JSON grammar, action catalog)\n  .agents/skills/sync-kapptivate-catalog/     catalog sync skill\n  .agents/skills/classify-kapptivate-result/  result-triage skill (why a run failed)\n  .claude/skills/*                            links to the three skills above, for Claude Code\n  CLAUDE.md                                   workspace instructions for Claude Code\n  AGENTS.md                                   same contract for other agents (Codex, Cursor, OpenCode, ...)\n  .mcp.json                                   kapptivate-automation MCP config (git-ignored)\n  .gitignore                                  keeps every secret-carrying file out of version control\n  .ktm.json                                   workspace scope: operator, products, host (committable)\n  catalog/INDEX.md                            platform inventory snapshot (stub)\n  pages/README.md                             verified-selectors library conventions\n\nWhen run in a terminal (and no .ktm.json exists yet), a short wizard prompts\nfor the Kapptivate API key, platform host, automation MCP URL, and the MCP\nAuthorization header. On a configured workspace, --reconfigure re-runs it\nkeeping the recorded identity (rotates the key, re-discovers the robot), while\n--reset re-scopes the workspace (see the flags below).\nThe verified API key is saved to the OS keychain (macOS Keychain, Windows\nCredential Manager, Linux Secret Service; file fallback under\n~/.config/kapptivate/) — no direnv, no environment loading, works the same on\nWindows, macOS, and Linux. --local-key stores it in a git-ignored\n.ktm.local.json (0600) in the workspace instead. The MCP Authorization header\nis written inline into the git-ignored .mcp.json. Pipes, CI, and --no-input\nskip the wizard; KAPPTIVATE_API_KEY as an environment variable always takes\nprecedence over any stored key.\n\nThe workspace targets one operator. Accounts seeing a single operator are\nscoped automatically with no questions asked; pass --operator <slug> to pin\none explicitly (multi-operator accounts scaffold one workspace per operator).\n\nThe command is idempotent: existing files are left untouched and reported as\n\"skipped\". The three skill directories are owned by the ktm CLI and version-locked\nto it — after upgrading ktm, run \"ktm init --refresh-skills\" to bring an existing\nworkspace's skills up to date (only the skill folders are rewritten).\n\nUnlike other ktm commands, init prints a human-readable report by default —\nit is a command a person runs once. Agents scripting init should pass\n--no-input -o json; the JSON envelope includes the detected tools and where\nthe API key was stored.\n\nWorks offline and requires no authentication.",
+      "usage": "ktm init [flags]",
+      "aliases": "",
+      "args": [],
+      "flags": [
+        {
+          "short": null,
+          "long": "automation-url",
+          "type": "string",
+          "default": null,
+          "description": "URL of the kapptivate-automation MCP endpoint; replaces the placeholder in .mcp.json"
+        },
+        {
+          "short": null,
+          "long": "dir",
+          "type": "string",
+          "default": ".",
+          "description": "Directory to set the workspace up in (created if missing)"
+        },
+        {
+          "short": "n",
+          "long": "dry-run",
+          "type": "bool",
+          "default": null,
+          "description": "Print what would be created/updated without writing"
+        },
+        {
+          "short": null,
+          "long": "force",
+          "type": "bool",
+          "default": null,
+          "description": "Overwrite the embedded workspace files and skills. Merged and managed files are left as-is: .claude/settings.local.json, connected coding-agent configs, .ktm.json, and .ktm.local.json"
+        },
+        {
+          "short": null,
+          "long": "local-key",
+          "type": "bool",
+          "default": null,
+          "description": "Store the API key in a git-ignored .ktm.local.json (0600) in the workspace instead of the OS keychain"
+        },
+        {
+          "short": null,
+          "long": "no-input",
+          "type": "bool",
+          "default": null,
+          "description": "Never prompt; take values only from flags (CI-safe)"
+        },
+        {
+          "short": null,
+          "long": "operator",
+          "type": "string",
+          "default": null,
+          "description": "Operator slug this workspace targets (recorded in .ktm.json). Skips the wizard's operator question; with --no-input, written as-is"
+        },
+        {
+          "short": null,
+          "long": "reconfigure",
+          "type": "bool",
+          "default": null,
+          "description": "Re-run the wizard on a configured workspace, keeping its recorded identity (env, operator, product): only rotates/re-verifies the API key and re-discovers the automation robot. catalog/ and pages/ are left untouched. Use --reset to change the operator, product, or host"
+        },
+        {
+          "short": null,
+          "long": "refresh-skills",
+          "type": "bool",
+          "default": null,
+          "description": "Delete and rewrite the .agents/skills/ folders and their .claude/skills/ links from this binary's embedded version (other files keep skip-if-exists semantics)"
+        },
+        {
+          "short": null,
+          "long": "reset",
+          "type": "bool",
+          "default": null,
+          "description": "Re-scope a configured workspace: re-ask operator/product/host and rewrite .ktm.json. DESTRUCTIVE — clears catalog/ unconditionally (regenerable) and, after confirmation, pages/ (your hand-verified selectors); with --no-input pages/ is cleared without asking. --reset overrides --reconfigure"
+        },
+        {
+          "short": null,
+          "long": "wire",
+          "type": "strings",
+          "default": null,
+          "description": "Coding agents to connect the kapptivate-automation MCP to (claude, cursor, vscode, codex, gemini). Writes project-scoped config files; useful with --no-input"
+        }
+      ],
+      "examples": "# Scaffold into the current directory (interactive wizard on a TTY)\nktm init\n\n# Scaffold into a specific directory, wiring the automation MCP URL\nktm init --dir ~/work/acme-tests --automation-url https://robot-1.example.com/device-automation/mcp\n\n# Multi-operator account: pin the workspace's operator\nktm init --operator acme\n\n# Agent / CI mode: no prompts, machine-readable envelope\nktm init --no-input -o json\n\n# Rotate the key / re-discover the robot, keeping the recorded scope\nktm init --reconfigure\n\n# Re-scope the workspace to another operator (clears catalog/ and pages/)\nktm init --reset --operator other\n\n# After a ktm upgrade: refresh the CLI-owned skills, keep everything else\nktm init --refresh-skills\n\n# Preview without writing\nktm init -n",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
       "id": "login",
       "name": "ktm login",
       "path": [
@@ -2002,7 +2353,7 @@
           "description": "Operate on the file fallback instead of the OS keychain"
         }
       ],
-      "examples": "",
+      "examples": "# Clear the stored token and revoke it server-side\nktm logout\n\n# Clear only the local store (skip the revoke call)\nktm logout --keep-remote",
       "isLeaf": true,
       "subcommands": []
     },
@@ -2016,7 +2367,7 @@
       "slug": "metrics",
       "summary": "Metrics — query monitor KPIs, passive collector data, and device utilization from InfluxDB",
       "description": "Metrics — query monitor KPIs, passive collector data, and device utilization from InfluxDB",
-      "usage": "ktm metrics [command]",
+      "usage": "ktm metrics [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -2378,7 +2729,7 @@
       "slug": "monitoring-results",
       "summary": "Monitoring results — run outcomes from scheduled monitors",
       "description": "Monitoring results — run outcomes from scheduled monitors",
-      "usage": "ktm monitoring-results [command]",
+      "usage": "ktm monitoring-results [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -2507,7 +2858,7 @@
       "slug": "monitors",
       "summary": "Monitors — scheduled recurring executions of tests with status tracking",
       "description": "Monitors — scheduled recurring executions of tests with status tracking",
-      "usage": "ktm monitors [command]",
+      "usage": "ktm monitors [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -2882,7 +3233,7 @@
       "slug": "operators",
       "summary": "Operators — top-level organisational entities that own products, tests, and users",
       "description": "Operators — top-level organisational entities that own products, tests, and users",
-      "usage": "ktm operators [command]",
+      "usage": "ktm operators [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -2936,7 +3287,7 @@
       "slug": "products",
       "summary": "Products — applications or services under an operator that contain tests and monitors",
       "description": "Products — applications or services under an operator that contain tests and monitors",
-      "usage": "ktm products [command]",
+      "usage": "ktm products [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -2997,7 +3348,7 @@
       "slug": "resources",
       "summary": "Resources — SIMs, web agents, and smartphones available for test execution",
       "description": "Resources — SIMs, web agents, and smartphones available for test execution",
-      "usage": "ktm resources [command]",
+      "usage": "ktm resources [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -3036,7 +3387,7 @@
           "description": "Fetch installed apps on the device (for V2 smartphone test authoring: copy package→starting.app, app object→meta)"
         }
       ],
-      "examples": "# Get smartphone details\nktm resources get R92Y70ZDMKH\n\n# Get smartphone with installed apps (for V2 smartphone test authoring)\nktm resources get R92Y70ZDMKH --include-apps\n\n# Get smartphone with apps in table format\nktm resources get R92Y70ZDMKH --include-apps -o table",
+      "examples": "# Get smartphone details\nktm resources get EXAMPLE1234\n\n# Get smartphone with installed apps (for V2 smartphone test authoring)\nktm resources get EXAMPLE1234 --include-apps\n\n# Get smartphone with apps in table format\nktm resources get EXAMPLE1234 --include-apps -o table",
       "isLeaf": true,
       "subcommands": []
     },
@@ -3050,7 +3401,7 @@
       "top": "resources",
       "slug": "resources/list",
       "summary": "List available resources (SIMs, web agents, smartphones) for a product",
-      "description": "List hardware and software resources available for test execution.\n\nResources are scoped to a product. Use --type to filter by resource type,\nor omit it to fetch all three types.\n\nResource types and their identifiers (used in campaign JSON):\n  sim         — SIM cards, identified by national_msisdn\n  web-agent   — Ethernet/web agents, identified by hostname\n  smartphone  — Smartphones, identified by uuid\n\nThese identifiers are used as values for owner-type variables and direct_owners\nwhen constructing campaign JSON via \"ci build\".\n\nFor test creation: these identifiers are used as the \"owner\" field in test actions.\n  SIM national_msisdn      → owner for SIM action types (USSD, SMS_GET, DATA_*, CALL_*, etc.)\n  Web-agent hostname       → owner for ETHERNET action types (ETH_HTTP_API, ETH_PING, etc.)\n  Smartphone UUID          → owner for SMARTPHONE action types\n\nSIM and smartphone status is an object with value and detail fields (e.g.\n\"Available\", \"Disconnected (Sim not inserted)\"). EthernetAgent status is a boolean.\nBy default only available/online resources are shown; use --available=false to include\noffline resources.\n\nFilters:\n  --product    product slug (required, from 'products list')\n  --type       resource type: sim, web-agent, smartphone (omit to fetch all three)\n  --available  show only online/available resources (default: true)",
+      "description": "List hardware and software resources available for test execution.\n\nResources are scoped to a product. Use --type to filter by resource type,\nor omit it to fetch all three types.\n\nResource types and their identifiers (used in campaign JSON):\n  sim         — SIM cards, identified by national_msisdn\n  web-agent   — Ethernet/web agents, identified by hostname\n  smartphone  — Smartphones, identified by uuid\n\nThese identifiers are used as values for owner-type variables and direct_owners\nwhen constructing campaign JSON via \"ci build\".\n\nFor test creation: these identifiers are used as the \"owner\" field in test actions.\n  SIM national_msisdn      → owner for SIM action types (USSD, SMS_GET, DATA_*, CALL_*, etc.)\n  Web-agent hostname       → owner for ETHERNET action types (ETH_HTTP_API, ETH_PING, etc.)\n  Smartphone UUID          → owner for SMARTPHONE action types\n\nSmartphone installed apps are not part of this listing — use\n\"ktm resources get <serial> --include-apps\" to see the apps on one device.\n\nSIM and smartphone status is an object with value and detail fields (e.g.\n\"Available\", \"Disconnected (Sim not inserted)\"). EthernetAgent status is a boolean.\nBy default only available/online resources are shown; use --available=false to include\noffline resources.\n\nFilters:\n  --product    product slug (required, from 'products list')\n  --type       resource type: sim, web-agent, smartphone (omit to fetch all three)\n  --available  show only online/available resources (default: true)",
       "usage": "ktm resources list [flags]",
       "aliases": "",
       "args": [],
@@ -3091,7 +3442,7 @@
       "slug": "reusables",
       "summary": "Reusables — shared test fragments (tests with kind=2) embedded via import actions",
       "description": "Reusables — shared test fragments (tests with kind=2) embedded via import actions",
-      "usage": "ktm reusables [command]",
+      "usage": "ktm reusables [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -3242,8 +3593,8 @@
       "top": "shell",
       "slug": "shell",
       "summary": "Shell — interactive live sessions on SIM cards and web agents",
-      "description": "Send commands directly to devices and see results in real time.\nUnlike tests, shell commands have no assertions — they fire a command and return the raw result.\n\nSupported device types:\n  SIM (owner_kind=S):      USSD, SMS, calls, data operations via cellular network\n  Ethernet (owner_kind=E): HTTP API, ping, DNS, transfers via web agents\n\nSmartphones are not supported (WebSocket-only architecture).\n\nUSSD sessions are stateful — dialing a shortcode opens a session, and sending menu\noption numbers (1, 2, 3) navigates deeper into the menu tree. Sessions expire after\n~30s of inactivity. Use --wait to see the menu text inline.\n\nSome flows trigger asynchronous events (e.g. wait SMS after a USSD selection or API call).\nUse 'shell list --from-date <timestamp>' to poll for new shells since your session started.\n\nNote: SIM cards and web agents are shared resources. Active monitors run tests on the same\ndevices on a schedule. If a shell returns Blocked or Timeout unexpectedly, it may be resource\ncontention — wait 15-30s and retry. Use 'monitors toggle' to pause monitors if needed.",
-      "usage": "ktm shell [command]",
+      "description": "Send commands directly to devices and see results in real time.\nUnlike tests, shell commands have no assertions — they fire a command and return the raw result.\n\nSupported device types:\n  SIM (owner_kind=S):      USSD, SMS, calls, data operations via cellular network\n  Ethernet (owner_kind=E): HTTP API, ping, DNS, transfers via web agents\n\nSmartphones are not supported — drive them through tests or the live device automation instead.\n\nUSSD sessions are stateful — dialing a shortcode opens a session, and sending menu\noption numbers (1, 2, 3) navigates deeper into the menu tree. Sessions expire after\n~30s of inactivity. Use --wait to see the menu text inline.\n\nSome flows trigger asynchronous events (e.g. wait SMS after a USSD selection or API call).\nUse 'shell list --from-date <timestamp>' to poll for new shells since your session started.\n\nNote: SIM cards and web agents are shared resources. Active monitors run tests on the same\ndevices on a schedule. If a shell returns Blocked or Timeout unexpectedly, it may be resource\ncontention — wait 15-30s and retry. Use 'monitors toggle' to pause monitors if needed.",
+      "usage": "ktm shell [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -3315,8 +3666,8 @@
       ],
       "top": "shell",
       "slug": "shell/list",
-      "summary": "List recent shell actions",
-      "description": "List recent shell actions",
+      "summary": "List recent shell actions (last 24h by default)",
+      "description": "List recent shell actions (last 24h by default)",
       "usage": "ktm shell list [flags]",
       "aliases": "",
       "args": [],
@@ -3326,7 +3677,7 @@
           "long": "from-date",
           "type": "string",
           "default": null,
-          "description": "Only show shells created after this ISO 8601 timestamp"
+          "description": "Only show shells created after this time — ISO 8601 timestamp or a duration like 72h (that long ago). Defaults to the last 24h"
         },
         {
           "short": null,
@@ -3355,9 +3706,16 @@
           "type": "string",
           "default": null,
           "description": "Filter by status (P/D/O/B/C/T/M)"
+        },
+        {
+          "short": null,
+          "long": "to-date",
+          "type": "string",
+          "default": null,
+          "description": "Only show shells created before this time — ISO 8601 timestamp or a duration like 30m (that long ago)"
         }
       ],
-      "examples": "ktm shell list --product 123\nktm shell list --product 123 --status D\nktm shell list --product 123 --owner 0789800356 -o table\n# Poll for async events (wait SMS, USSD push) since session start\nktm shell list --product 123 --owner 0789800356 --from-date 2026-03-15T19:29:17Z --ordering -created",
+      "examples": "ktm shell list --product 123\nktm shell list --product 123 --status D\n# Widen the default 24h window: a duration back from now, or ISO timestamps\nktm shell list --product 123 --from-date 72h\nktm shell list --product 123 --from-date 2026-03-15T00:00:00Z --to-date 2026-03-16T00:00:00Z\n# Poll for async events (wait SMS, USSD push) since session start\nktm shell list --product 123 --owner 0789800356 --from-date 2026-03-15T19:29:17Z --ordering -created",
       "isLeaf": true,
       "subcommands": []
     },
@@ -3479,7 +3837,7 @@
       "top": "status",
       "slug": "status",
       "summary": "Check connectivity, authentication, and CLI version",
-      "description": "Quick health check for the CLI environment.\n\nReports the configured host, authentication state, CLI version, and API latency.\nUseful for verifying setup before running commands.",
+      "description": "Quick health check for the CLI environment.\n\nReports the configured host, authentication state, CLI version, and API latency.\nAuth shows the credential commands would actually use (an API key takes\nprecedence); a stored 'ktm login' session is reported alongside it either way.\nUseful for verifying setup before running commands.",
       "usage": "ktm status [flags]",
       "aliases": "",
       "args": [],
@@ -3498,7 +3856,7 @@
       "slug": "test-campaigns",
       "summary": "Tests campaigns — named ordered packs of tests",
       "description": "Tests campaigns are persistent, named, ordered packs of tests scoped to a\nsingle product (the entity the product UI calls a \"Tests campaign\").\n\nA Tests campaign is the SAVED object you CRUD here. To RUN one, build a campaign\nfrom it and pipe it to the runner:\n  ktm ci build --test-campaign <id> [--variant \"Group:Variant\"] | ktm ci run --stdin",
-      "usage": "ktm test-campaigns [command]",
+      "usage": "ktm test-campaigns [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -3630,7 +3988,7 @@
           "description": "Confirm the delete"
         }
       ],
-      "examples": "",
+      "examples": "ktm test-campaigns delete 42 --yes",
       "isLeaf": true,
       "subcommands": []
     },
@@ -3769,7 +4127,7 @@
       "slug": "tests",
       "summary": "Tests — automated test scenarios that can be executed and monitored",
       "description": "Tests — automated test scenarios that can be executed and monitored",
-      "usage": "ktm tests [command]",
+      "usage": "ktm tests [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -3898,13 +4256,20 @@
         },
         {
           "short": null,
+          "long": "skip-validation",
+          "type": "bool",
+          "default": null,
+          "description": "Bypass the client-side validator (the platform still validates). Use when the CLI validator lags the engine (future step/action types). V3 bucket resolution still runs — the API requires buckets on create."
+        },
+        {
+          "short": null,
           "long": "variant",
           "type": "strings",
           "default": null,
           "description": "Pin a variant for one variable group. Repeatable. Forms: '5' (numeric variant ID) or 'API:Staging' (group:variant by name). Groups not pinned use their default variant."
         }
       ],
-      "examples": "# Generate template, edit, then create\nktm tests template ETH_HTTP_API > test.json\n# ... edit test.json ...\nktm tests create --from-file test.json --product my-operator~my-product\n\n# Create with name override\nktm tests create --from-file test.json --product my-operator~my-product --name \"Login Test\"\n\n# Pin a single group's variant (other groups use their default variant)\nktm tests create --from-file test.json --product acme~web --variant API:Staging\n\n# Multi-group test: pin a different variant per group (forms can mix: 'group:variant' name or numeric ID)\nktm tests create --from-file test.json --product acme~web \\\n    --variant API:Staging --variant Database:Replica --variant 31\n\n# Auto-correct declared input_variable kinds when they don't match the platform's variable types\nktm tests create --from-file test.json --product acme~web --auto-correct-kinds",
+      "examples": "# Generate template, edit, then create\nktm tests template ETH_HTTP_API > test.json\n# ... edit test.json ...\nktm tests create --from-file test.json --product my-operator~my-product\n\n# Create with name override\nktm tests create --from-file test.json --product my-operator~my-product --name \"Login Test\"\n\n# Pin a single group's variant (other groups use their default variant)\nktm tests create --from-file test.json --product acme~web --variant API:Staging\n\n# Multi-group test: pin a different variant per group (forms can mix: 'group:variant' name or numeric ID)\nktm tests create --from-file test.json --product acme~web \\\n    --variant API:Staging --variant Database:Replica --variant 31\n\n# Auto-correct declared input_variable kinds when they don't match the platform's variable types\nktm tests create --from-file test.json --product acme~web --auto-correct-kinds\n\n# Bypass the client-side validator when it lags the engine (platform still validates)\nktm tests create --from-file test.json --product acme~web --skip-validation",
       "isLeaf": true,
       "subcommands": []
     },
@@ -4202,7 +4567,7 @@
       "top": "tests",
       "slug": "tests/list",
       "summary": "List tests, optionally filtered by operator and product",
-      "description": "List test scenarios defined on the platform.\n\nTests belong to a product (which belongs to an operator). Use --operator and\n--product to narrow results. Non-archived tests are returned by default.\n\nThe test \"id\" can be used in CI config files to trigger execution via \"ci run\".\n\nFilters:\n  --operator   scope to a single operator (slug from 'operators list')\n  --product    scope to a single product (slug from 'products list', format: operator~product)\n  --archived   include archived tests: true or false (default: non-archived only)\n  --tags       comma-separated tag filter (e.g. smoke,regression)\n  --name       substring match on test name (case-insensitive)\n  --ordering   sort field: name, created, modified (prefix with - for descending, e.g. -created)\n  --fields     restrict JSON response fields (comma-separated whitelist)\n  --page       page number (default: 1)\n  --page-size  results per page (default: 200)\n\nJSON output fields: id, name, product, owner, tags, archived, is_valid, status, kind, created, modified\nTable columns:      ID, NAME, PRODUCT, STATUS, KIND, ARCHIVED",
+      "description": "List test scenarios defined on the platform.\n\nTests belong to a product (which belongs to an operator). Use --operator and\n--product to narrow results. Non-archived tests are returned by default.\n\nThe test \"id\" can be used in CI config files to trigger execution via \"ci run\".\n\nFilters:\n  --operator   scope to a single operator (slug from 'operators list')\n  --product    scope to a single product (slug from 'products list', format: operator~product)\n  --archived   include archived tests: true or false (default: non-archived only)\n  --tags       comma-separated tag filter (e.g. smoke,regression)\n  --name       substring match on test name (case-insensitive)\n  --ordering   sort field: name, created, modified (prefix with - for descending, e.g. -created)\n  --fields     restrict JSON response fields (comma-separated whitelist)\n  --page       page number (default: 1)\n  --page-size  results per page (default: 20; pass a larger value to fetch more)\n\nJSON output fields: id, name, product, owner, tags, archived, is_valid, status, kind, created, modified\nTable columns:      ID, NAME, PRODUCT, STATUS, KIND, ARCHIVED",
       "usage": "ktm tests list [flags]",
       "aliases": "",
       "args": [],
@@ -4254,7 +4619,7 @@
           "long": "page-size",
           "type": "string",
           "default": null,
-          "description": "Number of results per page (default: 200)"
+          "description": "Number of results per page (default: 20; pass a larger value to fetch more)"
         },
         {
           "short": null,
@@ -4487,6 +4852,29 @@
       "subcommands": []
     },
     {
+      "id": "use",
+      "name": "ktm use",
+      "path": [
+        "use"
+      ],
+      "top": "use",
+      "slug": "use",
+      "summary": "Show or switch the workspace's default product (.ktm.json)",
+      "description": "Show or switch the default product recorded in the workspace's .ktm.json.\n\nThe default product fills --product on commands where it was not given\n(explicit flags always win). With several products configured, \"ktm use\"\nwithout arguments opens an interactive picker on a terminal, or prints the\ncurrent scope otherwise. The scope file is discovered git-style: the nearest\n.ktm.json in the current directory or one of its ancestors.",
+      "usage": "ktm use [product-slug] [flags]",
+      "aliases": "",
+      "args": [
+        {
+          "name": "product-slug",
+          "required": false
+        }
+      ],
+      "flags": [],
+      "examples": "# Show the current workspace scope\nktm use\n\n# Switch the default product\nktm use renault~mobile",
+      "isLeaf": true,
+      "subcommands": []
+    },
+    {
       "id": "users",
       "name": "ktm users",
       "path": [
@@ -4496,7 +4884,7 @@
       "slug": "users",
       "summary": "Users — human users and service accounts with access to the platform",
       "description": "Users — human users and service accounts with access to the platform",
-      "usage": "ktm users [command]",
+      "usage": "ktm users [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -4620,7 +5008,7 @@
       "slug": "variables",
       "summary": "Variables, groups, and variants — product-scoped configuration",
       "description": "Manage variables, variable groups, and variants from a single command tree.\n\nThe variable system is organised as Product → Variables → Groups → Variants:\n  - Variables  — typed values used by tests and monitors at runtime (single, secret, choice).\n  - Groups     — environment configurations that hold a set of variants.\n  - Variants   — environment slices inside a group (e.g. dev, staging, prod).\n\nEach operation is a dedicated single-purpose subcommand so the verb is always\nunambiguous.",
-      "usage": "ktm variables [command]",
+      "usage": "ktm variables [flags]",
       "aliases": "",
       "args": [],
       "flags": [],
@@ -4768,7 +5156,7 @@
       "slug": "variables/groups",
       "summary": "Variable groups — environment configurations holding a set of variants",
       "description": "Manage variable groups under the variables umbrella.\n\nVariants management lives under 'ktm variables variants' (add | remove | rename\n| set-default | copy-values). The 'groups update' command is rename-only.",
-      "usage": "ktm variables groups [command]",
+      "usage": "ktm variables groups [flags]",
       "aliases": "groups, group",
       "args": [],
       "flags": [],
@@ -5174,7 +5562,7 @@
       "slug": "variables/variants",
       "summary": "Variants — environment slices inside a variable group (dev, staging, prod, …)",
       "description": "Manage variants under a variable group: add, remove (safe-by-default),\nrename, set the default, and copy values across variants. Use\n'ktm variables groups show <id>' to list current variants.",
-      "usage": "ktm variables variants [command]",
+      "usage": "ktm variables variants [flags]",
       "aliases": "variants, variant",
       "args": [],
       "flags": [],
@@ -5379,8 +5767,8 @@
       ],
       "top": "whoami",
       "slug": "whoami",
-      "summary": "Show the currently logged-in user (from the stored OAuth token)",
-      "description": "Display the identity carried by the stored OAuth token: subject (user ID),\nemail, granted scopes, issuer, and time until expiry.\n\nThis is a local-only read; it does NOT call the Authorization Server.\nInformation shown is read directly from the JWT payload (unverified\ndisplay only).",
+      "summary": "Show the identity the CLI authenticates as (API key or stored OAuth token)",
+      "description": "Display the identity behind the CLI's effective credentials, mirroring the\nsame resolution order every other command uses:\n\n  1. API key (--api-key-file, then KAPPTIVATE_API_KEY) — exchanged against the\n     platform for a JWT; identity claims are decoded from it (one network call).\n  2. Stored OAuth token from 'ktm login' — local-only read, no network.\n\nExit code 0 means the CLI has working credentials; 2 means it does not\n(no credentials, expired token, or a rejected API key). Claims are shown as\nunverified display values decoded from the JWT payload.",
       "usage": "ktm whoami [flags]",
       "aliases": "",
       "args": [],
@@ -5400,7 +5788,7 @@
           "description": "Operate on the file fallback instead of the OS keychain"
         }
       ],
-      "examples": "",
+      "examples": "# Show the identity behind the effective credentials\nktm whoami\n\n# Machine-readable envelope for scripts\nktm whoami -o json",
       "isLeaf": true,
       "subcommands": []
     }

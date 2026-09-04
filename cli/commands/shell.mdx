@@ -11,7 +11,7 @@ Shell — interactive live sessions on SIM cards and web agents
 ## Usage
 
 ```bash
-ktm shell [command]
+ktm shell [flags]
 ```
 
 ## Subcommands
@@ -24,7 +24,7 @@ ktm shell [command]
     Get full shell command result
   </Card>
   <Card title="list" icon="angle-right" href="/cli/commands/shell/list">
-    List recent shell actions
+    List recent shell actions (last 24h by default)
   </Card>
   <Card title="progress" icon="angle-right" href="/cli/commands/shell/progress">
     List pending and ongoing shell commands
@@ -46,7 +46,7 @@ Supported device types:
   SIM (owner_kind=S):      USSD, SMS, calls, data operations via cellular network
   Ethernet (owner_kind=E): HTTP API, ping, DNS, transfers via web agents
 
-Smartphones are not supported (WebSocket-only architecture).
+Smartphones are not supported — drive them through tests or the live device automation instead.
 
 USSD sessions are stateful — dialing a shortcode opens a session, and sending menu
 option numbers (1, 2, 3) navigates deeper into the menu tree. Sessions expire after

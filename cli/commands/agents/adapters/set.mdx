@@ -1,0 +1,77 @@
+---
+title: "ktm agents adapters set"
+description: "Change an adapter's settings on an agent, or for one phone"
+sidebarTitle: "set"
+---
+
+{/* GENERATED FILE — do not edit by hand. Regenerate with: node scripts/generate.mjs */}
+
+Change an adapter's settings on an agent, or for one phone
+
+## Usage
+
+```bash
+ktm agents adapters set <adapter> KEY=VALUE... [flags]
+```
+
+## Examples
+
+```bash
+ktm agents adapters set adb_bridge video_quality=low --agent phone-hub-01
+ktm agents adapters set adb_bridge video_quality=standard --agent phone-hub-01
+ktm agents adapters set adb_bridge video_quality=native --agent phone-hub-01 --resource EXAMPLE1234
+ktm agents adapters set adb_bridge video_quality= --agent phone-hub-01 --resource EXAMPLE1234
+# --empty KEY sets a free-text setting to "" (KEY= erases instead) — see 'get' for which keys exist
+```
+
+## Arguments
+
+| Argument | Required |
+| --- | --- |
+| `adapter` | Yes |
+
+## Flags
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--empty` | string[] | — | Set a setting to the empty string (repeatable) — KEY= erases instead |
+| `--resource` | string | — | Phone serial — apply to that phone only (KEY= clears its override) |
+
+## Details
+
+Changes one or more of an adapter's settings without restarting the agent. Run
+'ktm agents adapters get &lt;adapter&gt;' first to see which keys exist and which of
+them can be changed.
+
+Values are typed: the agent declares each setting's type, and this command sends
+the value in that form — so a number goes out as a number. Type a value the way
+'get' displays it (video_quality=low, idle_timeout=1800) and the conversion is
+automatic.
+
+With --resource &lt;serial&gt;, the change applies to that phone only; an empty value
+(KEY=) removes the override so the phone follows the agent-wide value again. To
+set a setting TO the empty string rather than clear it, use --empty KEY.
+
+Unknown keys and rejected values are refused outright — a change that reports
+success has been applied. Changes are ephemeral: after an agent restart, the
+agent's own configuration decides again.
+
+## Related
+
+- [`ktm agents adapters`](/cli/commands/agents/adapters)
+- [`ktm agents adapters get`](/cli/commands/agents/adapters/get)
+
+<Note>
+  Global flags (`--output`, `--debug`, `--host`, …) apply to every command. See the [command reference overview](/cli/commands/overview).
+</Note>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="All commands" icon="terminal" href="/cli/commands/overview">
+    Browse the full CLI reference.
+  </Card>
+  <Card title="Get started" icon="rocket" href="/cli/getting-started">
+    Install the CLI and authenticate.
+  </Card>
+</Columns>
