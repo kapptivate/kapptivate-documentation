@@ -3,7 +3,7 @@ title: Remplacer une SIM dans un robot cellulaire
 description: Installer une carte SIM, lui donner son numéro, et reprendre les réglages de la carte qu'elle remplace.
 ---
 
-Mettre une SIM en service tient en trois gestes : installer la carte, redémarrer son slot, puis donner son numéro à la nouvelle SIM. Ce qui se passe après l'enregistrement dépend du numéro saisi. Un numéro que personne n'utilise encore donne une SIM neuve. Un numéro qui appartient déjà à une autre SIM du workspace déclenche un swap, et Kapptivate reporte pour vous les réglages et les moniteurs de l'ancienne carte.
+Mettre une SIM en service tient en trois gestes : installer la carte, redémarrer son slot, puis donner son numéro à la nouvelle SIM. Ce qui se passe après l'enregistrement dépend du numéro saisi. Un numéro qui appartient déjà à une autre SIM du workspace déclenche un swap, et Kapptivate reporte pour vous les réglages et les moniteurs de l'ancienne carte. Un numéro que personne n'utilise encore donne une SIM neuve.
 
 <Warning>
   Chaque carte SIM utilisée dans un robot doit être configurée **sans code PIN**.
@@ -17,20 +17,20 @@ Mettre une SIM en service tient en trois gestes : installer la carte, redémarre
     Sous **Equipments**, ouvrez **Agents** et restez sur l'onglet **SIM Agents**. Recherchez l'agent par son hostname, ou réduisez la liste avec les filtres Status et Zone.
 
     <Frame caption="L'onglet SIM Agents de la section Agents">
-      ![The Agents area on the SIM Agents tab, with the SIM, Smartphone, Web, and Passive tabs, a search box, Status and Zone filters, and two agent cards showing status, zone, slots, and version](/images/hardware/swap-sim-01.webp)
+      ![La section Agents sur l'onglet SIM Agents, avec les onglets SIM, Smartphone, Web et Passive, un champ de recherche, les filtres Status et Zone, et deux cartes d'agent affichant statut, zone, slots et version](/images/hardware/swap-sim-01.webp)
     </Frame>
 
     Ouvrez l'agent, allez dans son onglet **Connected devices**, puis ouvrez le menu à trois points du slot que vous avez changé et cliquez sur **Reboot slot**.
 
     <Frame caption="Le menu du slot dans l'onglet Connected devices">
-      ![The Slots table of a cellular agent, with one slot holding a SIM and its open action menu offering Edit, Activate test-only mode, and Reboot slot](/images/hardware/swap-sim-02.webp)
+      ![La table Slots d'un agent cellulaire, avec un slot portant une SIM et son menu d'actions ouvert proposant Edit, Activate test-only mode et Reboot slot](/images/hardware/swap-sim-02.webp)
     </Frame>
   </Step>
   <Step title="Attendre que le slot détecte la carte">
     Le slot détecte la carte et l'affiche en **Unnamed**, avec le statut **Configuration**. Tous les statuts sont listés dans [Statuts](/fr/equipment/statuses).
 
     <Frame caption="Une carte en attente de configuration">
-      ![The Slots table of a cellular agent showing one configured SIM with the status Available and two unnamed SIMs with the status Configuration](/images/hardware/swap-sim-03.webp)
+      ![La table Slots d'un agent cellulaire montrant une SIM configurée au statut Available et deux SIM sans nom au statut Configuration](/images/hardware/swap-sim-03.webp)
     </Frame>
   </Step>
   <Step title="Donner son numéro à la SIM">
@@ -39,7 +39,7 @@ Mettre une SIM en service tient en trois gestes : installer la carte, redémarre
     Cliquez sur **Save changes**. Le nom de la SIM est généré à partir du numéro, il n'y a donc rien à saisir dans le champ Name.
 
     <Frame caption="La section About des paramètres de la SIM">
-      ![The Settings tab of a SIM, with the About, SIM Details, and Default APN sub-navigation and the About form holding National MSISDN, International MSISDN with a country selector, Name, and a Save changes button](/images/hardware/swap-sim-04.webp)
+      ![L'onglet Settings d'une SIM, avec la sous-navigation About, SIM Details et Default APN, et le formulaire About contenant National MSISDN, International MSISDN avec son sélecteur de pays, Name, et un bouton Save changes](/images/hardware/swap-sim-04.webp)
     </Frame>
   </Step>
 </Steps>
@@ -51,7 +51,7 @@ C'est le cas quand vous remplacez une carte qui exécutait déjà des tests, et 
 Saisissez le numéro de l'ancienne SIM et enregistrez. Kapptivate trouve la SIM qui le porte déjà et ouvre la fenêtre **Swap SIM values?**.
 
 <Frame caption="La fenêtre qui propose de reprendre les réglages de l'ancienne SIM">
-  ![The Swap SIM values dialog, warning that another SIM is already using this MSISDN and listing the information it would move over: International MSISDN, Products, Phone prefix, and APN address and credentials, with Cancel and Swap values buttons](/images/hardware/swap-sim-05.webp)
+  ![La fenêtre Swap SIM values, qui avertit qu'une autre SIM utilise déjà ce MSISDN et liste les informations qu'elle reprendrait : International MSISDN, Products, Phone prefix, et adresse et identifiants APN, avec les boutons Cancel et Swap values](/images/hardware/swap-sim-05.webp)
 </Frame>
 
 Cliquez sur **Swap values**. L'international MSISDN, les produits, le phone prefix et l'APN passent de l'ancienne SIM à la nouvelle, et les moniteurs qui tournaient sur l'ancienne carte reprennent sur la nouvelle. Il n'y a rien d'autre à configurer.
@@ -65,13 +65,13 @@ Un numéro jamais utilisé arrive sans aucun réglage, donnez donc à la SIM ce 
 Ouvrez l'onglet **General** de la SIM et allez dans **Products**. Activez **This SIM can be used by all the products**, ou laissez l'option désactivée et utilisez **Add product** pour constituer une liste restreinte.
 
 <Frame caption="Les produits autorisés à utiliser la SIM">
-  ![The Products section of a SIM, with the toggle This SIM can be used by all the products, a list of nine products with their operator, and an Add product button](/images/hardware/swap-sim-06.webp)
+  ![La section Products d'une SIM, avec l'interrupteur This SIM can be used by all the products, une liste de neuf produits et leur opérateur, et un bouton Add product](/images/hardware/swap-sim-06.webp)
 </Frame>
 
 Les tests data ont aussi besoin d'un point d'accès. De retour dans **Settings**, renseignez **Default APN** et cliquez sur **Save changes**.
 
 <Frame caption="L'APN par défaut de la SIM">
-  ![The Default APN section with APN name, APN login, and APN password fields and a Save changes button](/images/hardware/swap-sim-07.webp)
+  ![La section Default APN avec les champs APN name, APN login et APN password, et un bouton Save changes](/images/hardware/swap-sim-07.webp)
 </Frame>
 
 ## Et ensuite ?
